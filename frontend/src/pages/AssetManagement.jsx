@@ -74,13 +74,8 @@ export default function AssetManagement() {
         setCategories(list);
       } catch (err) {
         console.error('Failed to load categories', err);
-        // Fallback static categories if API fails or returns empty
-        setCategories([
-          { id: 'e1b2c3d4-5678-1234-5678-1234567890ab', name: 'IT Hardware' },
-          { id: 'f2c3d4e5-6789-2345-6789-2345678901bc', name: 'Furniture' },
-          { id: 'a3b4c5d6-7890-3456-7890-3456789012cd', name: 'Vehicles' },
-          { id: 'b4c5d6e7-8901-4567-8901-4567890123de', name: 'Software' }
-        ]);
+        // Do not set mock categories; let it be empty
+        setCategories([]);
       }
     };
     fetchCategories();

@@ -16,7 +16,18 @@ apiClient.interceptors.request.use(
   (config) => {
     // Check both standard keys for JWT tokens
     const token = localStorage.getItem('access_token') || localStorage.getItem('token');
-    if (token) {
+    
+    const publicEndpoints = [
+      '/auth/login',
+      '/auth/signup',
+      '/auth/register-organization',
+      '/auth/forgot-password',
+      '/auth/reset-password'
+    ];
+    
+    const isPublic = publicEndpoints.some(endpoint => config.url && config.url.includes(endpoint));
+    
+    if (token && !isPublic) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

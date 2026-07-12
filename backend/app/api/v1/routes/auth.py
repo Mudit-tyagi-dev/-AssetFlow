@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.db import get_db
 from app.schemas.user import (
     OrganizationRegisterRequest,
+    CreateOrganizationRequest,
     UserSignupRequest,
     UserLogin,
     Token,
@@ -13,6 +14,8 @@ from app.schemas.user import (
     PasswordResetRequest,
 )
 from app.services.auth_service import AuthService
+from app.api.v1.deps import get_current_user
+from app.models.user import User
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -31,9 +34,22 @@ async def signup(
     req: UserSignupRequest,
     db: AsyncSession = Depends(get_db)
 ):
-    """Sign up a new User with Employee role."""
+    """Sign up a new user with the Employee role (no org required at this stage)."""
     async with db.begin():
         user = await AuthService.signup_employee(db, req)
+        return user
+
+@router.post("/create-organization", response_model=UserRead, status_code=status.HTTP_201_CREATED)
+async def create_organization(
+    req: CreateOrganizationRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Create a new organization for the currently signed-in user.
+    The user must have no existing org. Their role will be upgraded to Admin.
+    """
+    async with db.begin():
+        user = await AuthService.create_organization_for_user(db, req, current_user)
         return user
 
 @router.post("/login", response_model=Token)
@@ -55,6 +71,13 @@ async def refresh(
     async with db.begin():
         token_data = await AuthService.refresh_tokens(db, req.refresh_token)
         return token_data
+
+@router.get("/me", response_model=UserRead)
+async def get_me(
+    current_user: User = Depends(get_current_user)
+):
+    """Get the currently logged-in user's profile."""
+    return current_user
 
 @router.post("/logout", status_code=status.HTTP_200_OK)
 async def logout(

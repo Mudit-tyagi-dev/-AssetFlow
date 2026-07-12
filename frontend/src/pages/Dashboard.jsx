@@ -1,23 +1,34 @@
 import { useState, useEffect } from 'react';
-import { ArrowUpRight, ArrowDownRight, Users, Box, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Box, ShieldAlert, Wrench, CheckCircle2, RotateCcw } from 'lucide-react';
+import { apiClient } from '../api/client';
+import toast from 'react-hot-toast';
 
 export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
+  const [dashboardData, setDashboardData] = useState(null);
 
-  // Simulate network request
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
+    const fetchDashboard = async () => {
+      try {
+        const response = await apiClient.get('/dashboard/summary');
+        setDashboardData(response.data.kpis);
+      } catch (error) {
+        console.error("Dashboard fetch error", error);
+        toast.error("Failed to load dashboard data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchDashboard();
   }, []);
 
-  const kpis = [
-    { title: 'Total Assets', value: '12,450', change: '+2.5%', trend: 'up', icon: Box },
-    { title: 'Active Employees', value: '3,240', change: '+1.2%', trend: 'up', icon: Users },
-    { title: 'Maintenance Alerts', value: '24', change: '-5.0%', trend: 'down', icon: AlertTriangle, warning: true },
-    { title: 'Compliance Rate', value: '98.5%', change: '+0.5%', trend: 'up', icon: CheckCircle2, success: true },
-  ];
+  const kpis = dashboardData ? [
+    { title: 'Available Assets', value: dashboardData.available_assets, trend: 'up', icon: Box },
+    { title: 'Allocated Assets', value: dashboardData.allocated_assets, trend: 'up', icon: CheckCircle2, success: true },
+    { title: 'Active Maintenance', value: dashboardData.maintenance_active, trend: dashboardData.maintenance_active > 0 ? 'down' : 'up', icon: Wrench, warning: dashboardData.maintenance_active > 0 },
+    { title: 'Overdue Returns', value: dashboardData.overdue_returns, trend: dashboardData.overdue_returns > 0 ? 'down' : 'up', icon: ShieldAlert, warning: dashboardData.overdue_returns > 0 },
+  ] : [];
 
   if (isLoading) {
     return (
@@ -82,12 +93,6 @@ export default function Dashboard() {
               <div className="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
                 <kpi.icon className="w-5 h-5" />
               </div>
-              <div className={`flex items-center text-sm font-medium ${
-                kpi.warning ? 'text-error' : kpi.trend === 'up' ? 'text-secondary-container bg-opacity-10' : 'text-error'
-              }`}>
-                {kpi.trend === 'up' ? <ArrowUpRight className="w-4 h-4 mr-1 text-secondary" /> : <ArrowDownRight className="w-4 h-4 mr-1 text-error" />}
-                <span className={kpi.trend === 'up' ? 'text-secondary' : 'text-error'}>{kpi.change}</span>
-              </div>
             </div>
             <div>
               <div className="text-3xl font-bold font-heading text-on-surface mb-1">{kpi.value}</div>
@@ -109,7 +114,7 @@ export default function Dashboard() {
           <div className="space-y-4">
             {[1, 2, 3].map(i => (
               <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors">
-                <AlertTriangle className="w-5 h-5 text-tertiary-container mt-0.5 flex-shrink-0" />
+                <ShieldAlert className="w-5 h-5 text-tertiary-container mt-0.5 flex-shrink-0" />
                 <div>
                   <div className="font-medium text-sm text-on-surface">Server #{400 + i} maintenance due</div>
                   <div className="text-xs text-on-surface-variant mt-1">2 hours ago</div>

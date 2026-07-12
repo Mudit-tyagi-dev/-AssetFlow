@@ -8,10 +8,8 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=8)
     name: str = Field(..., max_length=255)
-    org_id: uuid.UUID
 
 class UserSignupRequest(BaseModel):
-    org_id: uuid.UUID
     email: EmailStr
     password: str = Field(..., min_length=8)
     name: str = Field(..., max_length=255)
@@ -22,6 +20,12 @@ class OrganizationRegisterRequest(BaseModel):
     admin_name: str = Field(..., max_length=255)
     admin_email: EmailStr
     admin_password: str = Field(..., min_length=8)
+
+class CreateOrganizationRequest(BaseModel):
+    """Used by an already-authenticated user to create a new organization.
+    Their role will be upgraded to admin and linked to this org."""
+    org_name: str = Field(..., max_length=255)
+    org_slug: str = Field(..., max_length=100)
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -38,7 +42,7 @@ class UserAdminUpdate(BaseModel):
 
 class UserRead(BaseModel):
     id: uuid.UUID
-    org_id: uuid.UUID
+    org_id: Optional[uuid.UUID]
     name: str
     email: str
     role: UserRole
