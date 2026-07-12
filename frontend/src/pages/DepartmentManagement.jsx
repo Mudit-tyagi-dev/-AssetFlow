@@ -22,7 +22,7 @@ export default function DepartmentManagement() {
     try {
       const [deptsRes, empsRes] = await Promise.all([
         apiClient.get('/org/departments'),
-        apiClient.get('/org/employees?limit=1000')
+        apiClient.get('/org/employees?limit=20')
       ]);
       setDepartments(deptsRes.data || []);
       setEmployees(empsRes.data?.items || []);
