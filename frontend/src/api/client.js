@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Base URL points to the ngrok backend
-const BASE_URL = 'https://undeferrable-nonclimactic-giavanna.ngrok-free.dev/api/v1';
+// Base URL points to the local backend if defined in .env, else fallbacks to ngrok
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://undeferrable-nonclimactic-giavanna.ngrok-free.dev/api/v1';
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
