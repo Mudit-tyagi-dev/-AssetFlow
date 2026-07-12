@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://undeferrable-nonclimactic-giavanna.ngrok-free.dev/api/v1';
+const API_BASE_URL = 'https://assetflow-a5yb.onrender.com/api/v1';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
