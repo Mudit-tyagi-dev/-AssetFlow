@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base URL points to the ngrok backend
-const BASE_URL = 'https://undeferrable-nonclimactic-giavanna.ngrok-free.dev/api/v1';
+const BASE_URL = 'https://assetflow-a5yb.onrender.com/api/v1';
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
