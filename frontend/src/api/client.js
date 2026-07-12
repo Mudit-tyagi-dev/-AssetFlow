@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Use environment variable for API URL or fallback to localhost
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://assetflow-a5yb.onrender.com';
+// Base URL points to the ngrok backend
+const BASE_URL = 'https://assetflow-a5yb.onrender.com/api/v1';
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,

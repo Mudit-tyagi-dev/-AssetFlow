@@ -74,11 +74,11 @@ export default function AssetAllocation() {
     setError(null);
     try {
       const [allocData, transData, assetsData, catData, employeesData, deptsData] = await Promise.all([
-        AllocationsService.listAllocations({ limit: 1000 }),
-        AllocationsService.listTransfers({ limit: 1000 }),
-        AssetsService.listAssets({ limit: 1000 }),
+        AllocationsService.listAllocations({ limit: 20 }),
+        AllocationsService.listTransfers({ limit: 20 }),
+        AssetsService.listAssets({ limit: 20 }),
         AssetsService.getCategories(),
-        apiClient.get('/org/employees?limit=1000'),
+        apiClient.get('/org/employees?limit=20'),
         apiClient.get('/org/departments')
       ]);
 

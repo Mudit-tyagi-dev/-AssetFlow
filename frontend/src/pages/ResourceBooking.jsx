@@ -44,9 +44,9 @@ export default function ResourceBooking() {
     setError(null);
     try {
       const [bookingsData, assetsData, employeesData, deptsData] = await Promise.all([
-        BookingsService.listBookings({ limit: 1000 }),
-        AssetsService.listAssets({ limit: 1000 }),
-        apiClient.get('/org/employees?limit=1000'),
+        BookingsService.listBookings({ limit: 20 }),
+        AssetsService.listAssets({ limit: 20 }),
+        apiClient.get('/org/employees?limit=20'),
         apiClient.get('/org/departments')
       ]);
 
