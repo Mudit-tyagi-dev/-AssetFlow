@@ -89,8 +89,8 @@ export default function Signup() {
           {/* Form */}
           <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-on-surface-variant block" htmlFor="org_id">Organization ID</label>
-              <div className="relative group">
+              {/* <label className="text-sm font-medium text-on-surface-variant block" htmlFor="org_id">Organization ID</label> */}
+              {/* <div className="relative group">
                 <span className={`material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[20px] transition-colors ${errors.org_id ? 'text-error' : 'text-outline group-focus-within:text-primary'}`}>domain</span>
                 <input 
                   className={`w-full h-[44px] pl-[42px] pr-4 rounded-lg border bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 transition-all duration-200 text-sm ${
@@ -101,7 +101,7 @@ export default function Signup() {
                   type="text"
                   {...register('org_id')}
                 />
-              </div>
+              </div> */}
               {errors.org_id && <p className="text-xs font-semibold text-error mt-1">{errors.org_id.message}</p>}
             </div>
             <div className="space-y-1.5">
