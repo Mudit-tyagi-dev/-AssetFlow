@@ -21,6 +21,8 @@ import Audit from './pages/Audit';
 import Reports from './pages/Reports';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import RegisterOrg from './pages/RegisterOrg';
+import ForgotPassword from './pages/ForgotPassword';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -36,6 +38,8 @@ function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/register-org" element={<RegisterOrg />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>

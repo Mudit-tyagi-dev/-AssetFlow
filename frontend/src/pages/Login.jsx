@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import toast from 'react-hot-toast';
+import { jwtDecode } from 'jwt-decode';
+import { apiClient } from '../api/client';
 
 // Define the validation schema using Zod
 const loginSchema = z.object({
@@ -25,15 +27,34 @@ export default function Login() {
   });
 
   const onSubmit = async (data) => {
-    // Simulate a network request
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    console.log('Login attempt with:', data);
-    
-    // Show a success toast
-    toast.success('Successfully logged in!');
-    
-    // Route to the dashboard
-    navigate('/admin/dashboard');
+    try {
+      const response = await apiClient.post('/auth/login', {
+        email: data.email,
+        password: data.password
+      });
+      
+      const { access_token, refresh_token } = response.data;
+      
+      // Store tokens
+      localStorage.setItem('access_token', access_token);
+      localStorage.setItem('refresh_token', refresh_token);
+      
+      // Decode JWT to get role
+      const decoded = jwtDecode(access_token);
+      const role = decoded.role;
+      
+      toast.success('Successfully logged in!');
+      
+      // Route based on role
+      if (role === 'admin') navigate('/admin/dashboard');
+      else if (role === 'manager') navigate('/manager/dashboard');
+      else if (role === 'head') navigate('/head/dashboard');
+      else navigate('/user/dashboard');
+      
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error(error.response?.data?.detail || 'Failed to login. Please check credentials.');
+    }
   };
 
   return (
@@ -99,7 +120,7 @@ export default function Login() {
             <div className="space-y-1.5">
               <div className="flex justify-between items-center">
                 <label className="text-sm font-medium text-on-surface-variant" htmlFor="password">Password</label>
-                <a className="text-xs font-medium text-primary hover:text-primary-fixed-dim transition-colors" href="#">Forgot password?</a>
+                <Link className="text-xs font-medium text-primary hover:text-primary-fixed-dim transition-colors" to="/forgot-password">Forgot password?</Link>
               </div>
               <div className="relative group">
                 <span className={`material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[20px] transition-colors ${errors.password ? 'text-error' : 'text-outline group-focus-within:text-primary'}`}>lock</span>
@@ -138,16 +159,7 @@ export default function Login() {
             </button>
           </form>
 
-          {/* MOCK DEV LOGIN BUTTONS */}
-          <div className="flex flex-col gap-2 mt-4 p-4 border border-error/20 bg-error-container/10 rounded-xl">
-            <p className="text-xs font-bold text-error mb-1 uppercase tracking-widest text-center">Dev Mock Login</p>
-            <div className="grid grid-cols-2 gap-2">
-              <button onClick={() => { toast.success('Logged in as Admin'); navigate('/admin/dashboard'); }} className="text-xs bg-surface-container-high py-2 rounded font-semibold hover:bg-primary hover:text-white transition-colors">Admin</button>
-              <button onClick={() => { toast.success('Logged in as Asset Manager'); navigate('/manager/dashboard'); }} className="text-xs bg-surface-container-high py-2 rounded font-semibold hover:bg-primary hover:text-white transition-colors">Asset Manager</button>
-              <button onClick={() => { toast.success('Logged in as Dept Head'); navigate('/head/dashboard'); }} className="text-xs bg-surface-container-high py-2 rounded font-semibold hover:bg-primary hover:text-white transition-colors">Dept Head</button>
-              <button onClick={() => { toast.success('Logged in as Employee'); navigate('/user/dashboard'); }} className="text-xs bg-surface-container-high py-2 rounded font-semibold hover:bg-primary hover:text-white transition-colors">Employee</button>
-            </div>
-          </div>
+          {/* Removed Mock Dev Buttons */}
 
           {/* Divider */}
           <div className="relative py-3">
