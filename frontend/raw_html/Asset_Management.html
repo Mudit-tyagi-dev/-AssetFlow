@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AssetFlow - Enterprise Asset Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "surface-tint": "#4d44e3",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "background": "#f9f9ff",
+                    "surface-dim": "#d3daea",
+                    "primary-fixed": "#e2dfff",
+                    "surface-container-low": "#f0f3ff",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#dce2f3",
+                    "error-container": "#ffdad6",
+                    "inverse-surface": "#2a313d",
+                    "on-secondary-container": "#00714d",
+                    "surface": "#f9f9ff",
+                    "on-background": "#151c27",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "surface-bright": "#f9f9ff",
+                    "on-surface": "#151c27",
+                    "on-secondary-fixed-variant": "#005236",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#6cf8bb",
+                    "outline": "#777587",
+                    "surface-container-high": "#e2e8f8",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "on-tertiary-container": "#ffd4a4",
+                    "primary-container": "#4f46e5",
+                    "on-tertiary-fixed": "#2a1700",
+                    "tertiary-container": "#885500",
+                    "tertiary": "#684000",
+                    "tertiary-fixed": "#ffddb8",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-primary-container": "#dad7ff",
+                    "on-surface-variant": "#464555",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-fixed": "#0f0069",
+                    "secondary": "#006c49",
+                    "primary": "#3525cd",
+                    "inverse-primary": "#c3c0ff",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#002113",
+                    "surface-variant": "#dce2f3",
+                    "outline-variant": "#c7c4d8",
+                    "surface-container": "#e7eefe",
+                    "inverse-on-surface": "#ebf1ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit-xl": "32px",
+                    "unit-md": "16px",
+                    "sidebar-width": "260px",
+                    "gutter": "24px",
+                    "container-max": "1440px",
+                    "unit-sm": "8px",
+                    "margin-page": "32px",
+                    "unit-lg": "24px",
+                    "topbar-height": "64px",
+                    "unit-xs": "4px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "mono-sm": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "display-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "mono-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-sm": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .asset-table-container {
+            max-height: calc(100vh - 280px);
+            overflow-y: auto;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #dce2f3;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c7c4d8;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- Side Navigation Shell -->
+<aside class="w-sidebar-width h-screen fixed left-0 top-0 border-r border-outline-variant bg-surface flex flex-col h-full py-unit-md px-unit-sm z-50">
+<div class="flex items-center gap-unit-sm px-unit-sm mb-unit-xl">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+</div>
+<div>
+<h1 class="text-headline-sm font-headline-sm font-bold text-primary">AssetFlow</h1>
+<p class="text-xs text-on-surface-variant leading-none">Enterprise ERP</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">corporate_fare</span>
+<span class="font-label-md text-label-md">Organization</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container font-semibold rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label-md text-label-md">Assets</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">assignment_ind</span>
+<span class="font-label-md text-label-md">Allocation</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">event_available</span>
+<span class="font-label-md text-label-md">Booking</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">build</span>
+<span class="font-label-md text-label-md">Maintenance</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="font-label-md text-label-md">Audit</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+</nav>
+<div class="mt-auto pt-unit-md border-t border-outline-variant space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-md text-label-md">Notifications</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Top Navigation Shell -->
+<header class="h-topbar-height sticky top-0 z-40 bg-surface border-b border-outline-variant flex justify-between items-center px-gutter w-full ml-sidebar-width max-w-[calc(100%-260px)]">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 text-body-md focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search assets, tags, or locations..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="font-label-md text-label-md text-on-surface">Alex Thompson</p>
+<p class="text-[10px] text-on-surface-variant font-bold tracking-wider">OPS MANAGER</p>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged male operations manager with a friendly but authoritative expression, set against a blurred clean office background with soft daylight. The image has a high-end corporate aesthetic with natural lighting and a cool color palette of whites and soft blues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBw2kcVE6mgntQsbV_iWlau-OOrlAiRQJKiuTiJiKxXzwSNvETuCIOX9VIv_s7yaYKSppw71mMcsRBeVvylQC7H9OPHUJ2RgV6hedhHrQiNeORUVMM8XRWBo0IVFMNXKgsgtudEO9o8JJ_Yp8hQfqgt14qVGRJc7PKlwzQjFTCXdFt-o5YvMEk8QER1NBo9sVu60emI6uS0UAgCYEzBHP5ha_A3eroVKsrYnFzjYXfVip6brp_BwYx5nw"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-sidebar-width min-h-[calc(100vh-64px)] p-margin-page transition-all">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-unit-lg">
+<div>
+<nav class="flex items-center gap-2 text-on-surface-variant text-label-sm mb-2">
+<span>Assets</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-bold">Inventory List</span>
+</nav>
+<h2 class="font-display-lg text-display-lg text-on-surface">Asset Management</h2>
+<p class="text-body-md text-on-surface-variant">Manage and track organization-wide hardware and physical assets.</p>
+</div>
+<div class="flex items-center gap-unit-sm">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline text-on-surface font-label-md rounded-xl hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">download</span>
+                    Export CSV
+                </button>
+<button class="flex items-center gap-2 px-6 py-2 bg-primary text-on-primary font-label-md rounded-xl hover:shadow-lg active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined">add</span>
+                    Register Asset
+                </button>
+</div>
+</div>
+<!-- Filter & Stats Bar -->
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-gutter mb-unit-lg">
+<!-- Filter Section -->
+<div class="lg:col-span-3 bg-surface-container-lowest rounded-xl border border-outline-variant p-4 flex flex-wrap items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">filter_list</span>
+<span class="text-label-sm uppercase tracking-wider text-on-surface-variant">Filters:</span>
+</div>
+<div class="flex items-center gap-2">
+<select class="bg-surface-container-low border-none rounded-lg text-body-md py-1.5 pl-3 pr-8 focus:ring-1 focus:ring-primary">
+<option>All Statuses</option>
+<option>Active</option>
+<option>Maintenance</option>
+<option>In Storage</option>
+<option>Retired</option>
+<option>Lost/Stolen</option>
+</select>
+</div>
+<div class="flex items-center gap-2">
+<select class="bg-surface-container-low border-none rounded-lg text-body-md py-1.5 pl-3 pr-8 focus:ring-1 focus:ring-primary">
+<option>All Categories</option>
+<option>Computing</option>
+<option>Networking</option>
+<option>Furniture</option>
+<option>Mobile Devices</option>
+<option>Peripherals</option>
+</select>
+</div>
+<div class="flex items-center gap-2">
+<select class="bg-surface-container-low border-none rounded-lg text-body-md py-1.5 pl-3 pr-8 focus:ring-1 focus:ring-primary">
+<option>Any Condition</option>
+<option>New</option>
+<option>Excellent</option>
+<option>Good</option>
+<option>Fair</option>
+<option>Poor</option>
+</select>
+</div>
+<div class="ml-auto flex items-center gap-2">
+<button class="text-primary font-label-sm hover:underline">Clear all</button>
+</div>
+</div>
+<!-- Mini Stats -->
+<div class="bg-primary-container text-on-primary-container rounded-xl p-4 flex items-center justify-between">
+<div>
+<p class="text-label-sm font-bold opacity-80">Total Value</p>
+<h3 class="text-headline-md font-bold">$1,248,500</h3>
+</div>
+<div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+</div>
+</div>
+<!-- Table Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="asset-table-container">
+<table class="w-full text-left border-collapse">
+<thead class="sticky top-0 bg-surface-container-low z-10 border-b border-outline-variant">
+<tr>
+<th class="px-4 py-4 text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Photo</th>
+<th class="px-4 py-4 text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Asset Tag</th>
+<th class="px-4 py-4 text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Name & Category</th>
+<th class="px-4 py-4 text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Serial Number</th>
+<th class="px-4 py-4 text-label-sm uppercase tracking-wider text-on-surface-variant font-bold text-center">Status</th>
+<th class="px-4 py-4 text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Assigned To</th>
+<th class="px-4 py-4 text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Location</th>
+<th class="px-4 py-4 text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Condition</th>
+<th class="px-4 py-4 text-label-sm uppercase tracking-wider text-on-surface-variant font-bold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-4 py-3">
+<div class="w-10 h-10 rounded-lg overflow-hidden border border-outline-variant bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A high-resolution product photograph of a modern space gray 16-inch laptop on a clean white surface with minimal shadows. Professional lighting highlights the sleek metallic finish and premium build quality of the device, adhering to a minimalist corporate asset management aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7PmaJmIwUgSQd7fO0tXl1ZIyuSlX79bJXcQQVNn8qi1dQCsdxmZv06iaiDJkdjTfIIjEVp7lbZERQ50H8oOy-SJT3bjtwMdzy490PpJJbXHs18MZN38Cx7YLASIUR5t342LEgYuaAjHvajOqOHWSfr05tNnOKvBl_5K9HkwmxCmA2iLzoI1WkmQj5l3Mwd7ABU9UcXMUylZ9hh4-PweB6rLtuQuciPb8GlVrF11lUBjccdXap8wzhXQ"/>
+</div>
+</td>
+<td class="px-4 py-3 font-mono-sm text-on-surface">AST-00421</td>
+<td class="px-4 py-3">
+<p class="font-label-md text-on-surface">MacBook Pro M3 Max</p>
+<p class="text-xs text-on-surface-variant">Computing / Laptops</p>
+</td>
+<td class="px-4 py-3 font-mono-sm text-xs text-on-surface-variant">C02XH45LKJ12</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-secondary-container/20 text-secondary border border-secondary/30">
+                                    Active
+                                </span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary-fixed flex items-center justify-center text-[10px] font-bold text-primary">JD</div>
+<span class="text-body-md">Jane Doe</span>
+</div>
+</td>
+<td class="px-4 py-3 text-body-md text-on-surface-variant">London - Floor 4</td>
+<td class="px-4 py-3">
+<span class="text-body-md text-secondary">Excellent</span>
+</td>
+<td class="px-4 py-3 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-4 py-3">
+<div class="w-10 h-10 rounded-lg overflow-hidden border border-outline-variant bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A professional close-up of a high-end enterprise network router with glowing green and blue LED indicators. The device is mounted in a server rack with clean cable management visible in the background. Photographed with a shallow depth of field in a cool-toned, high-tech data center environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhctcV6AWaRXl1a1B7iV2qaiyweamVyz6iFJC3QQ4oqqFhD4qMtM55C1Rw__sL8GkNDAmBX-uhHnj6ZsXLvCg5pHhK7GVbVSdpT7tg67kdnzbEnQwECW1Lyrmvp4SUMmjDBS1D107YVW60v4jj1GByqWy8y30Wqa4JiunfyXorzyLKdPC4Ymu6HY0AqR25ae4a0GIi38CHZTvKnX2hvNuqzqG31-rHuWYAflMFwkF7LL2mqrdwuyw7lQ"/>
+</div>
+</td>
+<td class="px-4 py-3 font-mono-sm text-on-surface">AST-00892</td>
+<td class="px-4 py-3">
+<p class="font-label-md text-on-surface">Cisco Catalyst 9300</p>
+<p class="text-xs text-on-surface-variant">Networking / Switches</p>
+</td>
+<td class="px-4 py-3 font-mono-sm text-xs text-on-surface-variant">SN-9988221100</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-tertiary-container/20 text-tertiary border border-tertiary/30">
+                                    Maintenance
+                                </span>
+</td>
+<td class="px-4 py-3">
+<span class="text-body-md italic text-on-surface-variant">Unassigned</span>
+</td>
+<td class="px-4 py-3 text-body-md text-on-surface-variant">New York - Server Rm</td>
+<td class="px-4 py-3">
+<span class="text-body-md text-tertiary">Fair</span>
+</td>
+<td class="px-4 py-3 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-4 py-3">
+<div class="w-10 h-10 rounded-lg overflow-hidden border border-outline-variant bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A studio shot of an ergonomic designer office chair in charcoal mesh with polished aluminum base. The chair is positioned at an angle against a neutral grey studio background, emphasizing its sleek lines and high-end ergonomic features. Soft professional lighting creates a premium commercial furniture aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5UzwTZfLZNdBYfsv6I7D8atMZy6N3alg68fqoqx1uzyOt6MBkub1BgmJL-7q-wYBRRY6BJu3MWZ4STCA7EfE5fw4RpoUqaY2-DPU2f8TL0YGB5AIxUM6JaRuD5do1aBXEAa3bm5N_XOytN-msGR3gyPuXS54lDbUjdSH9ozg2npUIsjKaJ7BqOjDJq2yMiEqe8-IcQP6STj3-uISw8qSjK9U0Vf6aNWDH5EZOPfmgf4wiKIUEer2ZFg"/>
+</div>
+</td>
+<td class="px-4 py-3 font-mono-sm text-on-surface">AST-01054</td>
+<td class="px-4 py-3">
+<p class="font-label-md text-on-surface">Herman Miller Aeron</p>
+<p class="text-xs text-on-surface-variant">Furniture / Seating</p>
+</td>
+<td class="px-4 py-3 font-mono-sm text-xs text-on-surface-variant">HM-2023-AERON-L</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary-container/20 text-primary border border-primary/30">
+                                    In Storage
+                                </span>
+</td>
+<td class="px-4 py-3">
+<span class="text-body-md italic text-on-surface-variant">Unassigned</span>
+</td>
+<td class="px-4 py-3 text-body-md text-on-surface-variant">Berlin - Warehouse A</td>
+<td class="px-4 py-3">
+<span class="text-body-md text-secondary">Excellent</span>
+</td>
+<td class="px-4 py-3 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-4 py-3">
+<div class="w-10 h-10 rounded-lg overflow-hidden border border-outline-variant bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A modern tablet computer shown with its stylus accessory on a light oak desk. The screen is off, reflecting a subtle, clean office environment. The image is bright and airy, with a focus on portable technology and contemporary workplace tools. High-end lifestyle photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1i7fjMCmwEhbWbWARZ8plG9znDSeA_ptF3Avo78vj1MfuQQ-ACg7fTBkAAOLr40IwfIjXhidlAsqP_R0T8S5Y768LG2IdIONTe64cjyifCwrunjQkpwRmJ6ZJV_IXXenHKHW4eRpmDFqfQLPLUcEtqnWcFnyrDYex7UxBdOVaceJJeYJqsYm225jgTnyXdR6GMqieakov0YrZ_Yd_yjYPtDKKGT0mKwXI50GXkikL9rzr6EuqPK26HQ"/>
+</div>
+</td>
+<td class="px-4 py-3 font-mono-sm text-on-surface">AST-00567</td>
+<td class="px-4 py-3">
+<p class="font-label-md text-on-surface">iPad Pro 12.9"</p>
+<p class="text-xs text-on-surface-variant">Mobile / Tablets</p>
+</td>
+<td class="px-4 py-3 font-mono-sm text-xs text-on-surface-variant">DMPP99283741</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-error-container/20 text-error border border-error/30">
+                                    Retired
+                                </span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-secondary-fixed flex items-center justify-center text-[10px] font-bold text-secondary">MS</div>
+<span class="text-body-md">Mark Smith</span>
+</div>
+</td>
+<td class="px-4 py-3 text-body-md text-on-surface-variant">Tokyo - HQ</td>
+<td class="px-4 py-3">
+<span class="text-body-md text-error">Poor</span>
+</td>
+<td class="px-4 py-3 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-4 py-3">
+<div class="w-10 h-10 rounded-lg overflow-hidden border border-outline-variant bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A collection of professional DSLR camera lenses arranged neatly on a dark foam-lined equipment case. The glass elements glint under soft studio lights, showcasing the precision engineering of the optical hardware. The overall atmosphere is professional, technical, and organized for media production assets." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHbBAo9dcE9fPSdI_OGs_vELfF3Voi9_IEwEWVXIsXAg9dLgSgnY1KkOOkWCZ-rDqcIBkG7lwhHu5M07Mh46DzbKe4QX5kVBoYhJuS3jpJ3J-c9uQwRxMOqInneTOVOtYP0YKzzVCTnoOlTlYTH4f4rmWilnKogmgh-3t-vmfuMibKDUnL8LbM8lIYSprdLwjFhcJreIfbr3MkAHFKYIBIVcXBIQTyjOx-lci5fXODl_Di1i2efMOeyw"/>
+</div>
+</td>
+<td class="px-4 py-3 font-mono-sm text-on-surface">AST-01201</td>
+<td class="px-4 py-3">
+<p class="font-label-md text-on-surface">Sony FE 24-70mm GM</p>
+<p class="text-xs text-on-surface-variant">Media / Optics</p>
+</td>
+<td class="px-4 py-3 font-mono-sm text-xs text-on-surface-variant">SN-LENS-889900</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-outline-variant/30 text-on-surface-variant border border-outline-variant">
+                                    Lost/Stolen
+                                </span>
+</td>
+<td class="px-4 py-3">
+<span class="text-body-md italic text-on-surface-variant">N/A</span>
+</td>
+<td class="px-4 py-3 text-body-md text-on-surface-variant">Unknown</td>
+<td class="px-4 py-3">
+<span class="text-body-md text-on-surface-variant">Unknown</span>
+</td>
+<td class="px-4 py-3 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant flex flex-col sm:flex-row items-center justify-between gap-4">
+<p class="text-body-sm text-on-surface-variant">
+                    Showing <span class="font-bold text-on-surface">1 - 5</span> of <span class="font-bold text-on-surface">1,402</span> assets
+                </p>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-lg hover:bg-surface-container-high disabled:opacity-30 transition-all" disabled="">
+<span class="material-symbols-outlined">first_page</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-surface-container-high disabled:opacity-30 transition-all" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex items-center px-2">
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary font-bold text-xs">1</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-high text-xs">2</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-high text-xs">3</button>
+<span class="px-2">...</span>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-high text-xs">281</button>
+</div>
+<button class="p-2 rounded-lg hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">last_page</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Floating Action Button (Contextual) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40 group">
+<span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform">add</span>
+<span class="absolute right-full mr-4 bg-inverse-surface text-inverse-on-surface px-3 py-1 rounded-lg text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                Quick Register
+            </span>
+</button>
+</main>
+<script>
+        // Simple Interaction logic
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('change', function() {
+                // Flash animation for visual feedback
+                const rowContainer = document.querySelector('.asset-table-container');
+                rowContainer.style.opacity = '0.5';
+                setTimeout(() => {
+                    rowContainer.style.opacity = '1';
+                }, 300);
+            });
+        });
+
+        // Search Bar focus interaction
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary/20');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary/20');
+        });
+    </script>
+</body></html>
