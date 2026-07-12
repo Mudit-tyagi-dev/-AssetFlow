@@ -63,9 +63,9 @@ export default function Audit() {
     setError(null);
     try {
       const [cyclesData, assetsData, employeesData, deptsData] = await Promise.all([
-        AuditsService.listCycles({ limit: 1000 }),
-        AssetsService.listAssets({ limit: 1000 }),
-        apiClient.get('/org/employees?limit=1000'),
+        AuditsService.listCycles({ limit: 20 }),
+        AssetsService.listAssets({ limit: 20 }),
+        apiClient.get('/org/employees?limit=20'),
         apiClient.get('/org/departments')
       ]);
 
@@ -90,7 +90,7 @@ export default function Audit() {
   const loadCycleItems = async (cycleId) => {
     setIsItemsLoading(true);
     try {
-      const itemsData = await AuditsService.listItems(cycleId, { limit: 1000 });
+      const itemsData = await AuditsService.listItems(cycleId, { limit: 20 });
       setCycleItems(itemsData.items || []);
     } catch (err) {
       console.error('Failed to load cycle items:', err);
@@ -673,7 +673,7 @@ export default function Audit() {
               <span className="text-xs font-semibold text-on-surface-variant">verified</span>
             </div>
             <div className="w-full bg-surface-container-highest h-2 rounded-full mt-2 overflow-hidden">
-              <div className="bg-primary h-full transition-all duration-1000" style={{ width: metrics.progress }}></div>
+              <div className="bg-primary h-full transition-all duration-20" style={{ width: metrics.progress }}></div>
             </div>
           </div>
         </div>

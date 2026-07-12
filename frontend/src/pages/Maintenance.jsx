@@ -64,9 +64,9 @@ export default function Maintenance() {
     setError(null);
     try {
       const [maintData, assetsData, employeesData] = await Promise.all([
-        MaintenanceService.listRequests({ limit: 1000 }),
-        AssetsService.listAssets({ limit: 1000 }),
-        apiClient.get('/org/employees?limit=1000')
+        MaintenanceService.listRequests({ limit: 20 }),
+        AssetsService.listAssets({ limit: 20 }),
+        apiClient.get('/org/employees?limit=20')
       ]);
 
       setRequests(maintData.items || []);
