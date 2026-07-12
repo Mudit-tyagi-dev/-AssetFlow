@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Use environment variable for API URL or fallback to localhost
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://undeferrable-nonclimactic-giavanna.ngrok-free.dev/api/v1';
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -11,11 +11,22 @@ export const apiClient = axios.create({
   }
 });
 
-// Request interceptor to attach JWT token
+// Request interceptor to attach JWT token to protected routes
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
-    if (token) {
+    
+    const publicEndpoints = [
+      '/auth/login',
+      '/auth/signup',
+      '/auth/register-organization',
+      '/auth/forgot-password',
+      '/auth/reset-password'
+    ];
+    
+    const isPublic = publicEndpoints.some(endpoint => config.url && config.url.includes(endpoint));
+    
+    if (token && !isPublic) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://undeferrable-nonclimactic-giavanna.ngrok-free.dev/api/v1';
+const API_BASE_URL = 'https://undeferrable-nonclimactic-giavanna.ngrok-free.dev/api/v1';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -16,7 +16,18 @@ apiClient.interceptors.request.use(
   (config) => {
     // Check both standard keys for JWT tokens
     const token = localStorage.getItem('access_token') || localStorage.getItem('token');
-    if (token) {
+    
+    const publicEndpoints = [
+      '/auth/login',
+      '/auth/signup',
+      '/auth/register-organization',
+      '/auth/forgot-password',
+      '/auth/reset-password'
+    ];
+    
+    const isPublic = publicEndpoints.some(endpoint => config.url && config.url.includes(endpoint));
+    
+    if (token && !isPublic) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
