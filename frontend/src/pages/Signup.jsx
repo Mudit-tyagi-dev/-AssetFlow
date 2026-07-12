@@ -1,8 +1,42 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import toast from 'react-hot-toast';
+
+// Define the validation schema using Zod
+const signupSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters').regex(/[A-Z]/, 'Password must contain at least one uppercase letter').regex(/[0-9]/, 'Password must contain at least one number'),
+  terms: z.boolean().refine((val) => val === true, 'You must agree to the terms'),
+});
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  // Initialize react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(signupSchema),
+  });
+
+  const onSubmit = async (data) => {
+    // Simulate a network request
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log('Signup attempt with:', data);
+    
+    // Show a success toast
+    toast.success('Account created successfully! Welcome to AssetFlow.');
+    
+    // Route to login
+    navigate('/login');
+  };
 
   return (
     <main className="flex h-screen w-full overflow-hidden bg-background font-sans text-on-surface">
@@ -28,8 +62,6 @@ export default function Signup() {
               The next-generation ERP for high-performance enterprise resource planning and asset management.
             </p>
           </div>
-          {/* Data Micro-Card Overlay */}
-          
         </div>
       </section>
 
@@ -47,42 +79,53 @@ export default function Signup() {
           </div>
 
           {/* Form */}
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className="space-y-1.5">
               <label className="text-sm font-medium text-on-surface-variant block" htmlFor="name">Full Name</label>
               <div className="relative group">
-                <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors text-[20px]">person</span>
+                <span className={`material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[20px] transition-colors ${errors.name ? 'text-error' : 'text-outline group-focus-within:text-primary'}`}>person</span>
                 <input 
-                  className="w-full h-[44px] pl-[42px] pr-4 rounded-lg border border-outline-variant bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-sm" 
+                  className={`w-full h-[44px] pl-[42px] pr-4 rounded-lg border bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 transition-all duration-200 text-sm ${
+                    errors.name ? 'border-error focus:ring-error/20 focus:border-error' : 'border-outline-variant focus:ring-primary/20 focus:border-primary'
+                  }`} 
                   id="name" 
                   placeholder="Alex Carter" 
                   type="text"
+                  {...register('name')}
                 />
               </div>
+              {errors.name && <p className="text-xs font-semibold text-error mt-1">{errors.name.message}</p>}
             </div>
             
             <div className="space-y-1.5">
               <label className="text-sm font-medium text-on-surface-variant block" htmlFor="email">Email Address</label>
               <div className="relative group">
-                <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors text-[20px]">mail</span>
+                <span className={`material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[20px] transition-colors ${errors.email ? 'text-error' : 'text-outline group-focus-within:text-primary'}`}>mail</span>
                 <input 
-                  className="w-full h-[44px] pl-[42px] pr-4 rounded-lg border border-outline-variant bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-sm" 
+                  className={`w-full h-[44px] pl-[42px] pr-4 rounded-lg border bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 transition-all duration-200 text-sm ${
+                    errors.email ? 'border-error focus:ring-error/20 focus:border-error' : 'border-outline-variant focus:ring-primary/20 focus:border-primary'
+                  }`} 
                   id="email" 
                   placeholder="name@company.com" 
                   type="email"
+                  {...register('email')}
                 />
               </div>
+              {errors.email && <p className="text-xs font-semibold text-error mt-1">{errors.email.message}</p>}
             </div>
             
             <div className="space-y-1.5">
               <label className="text-sm font-medium text-on-surface-variant block" htmlFor="password">Password</label>
               <div className="relative group">
-                <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors text-[20px]">lock</span>
+                <span className={`material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[20px] transition-colors ${errors.password ? 'text-error' : 'text-outline group-focus-within:text-primary'}`}>lock</span>
                 <input 
-                  className="w-full h-[44px] pl-[42px] pr-[42px] rounded-lg border border-outline-variant bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-sm" 
+                  className={`w-full h-[44px] pl-[42px] pr-[42px] rounded-lg border bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 transition-all duration-200 text-sm ${
+                    errors.password ? 'border-error focus:ring-error/20 focus:border-error' : 'border-outline-variant focus:ring-primary/20 focus:border-primary'
+                  }`}
                   id="password" 
                   placeholder="••••••••" 
                   type={showPassword ? "text" : "password"}
+                  {...register('password')}
                 />
                 <button 
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors" 
@@ -92,20 +135,30 @@ export default function Signup() {
                   <span className="material-symbols-outlined text-[20px]">{showPassword ? "visibility_off" : "visibility"}</span>
                 </button>
               </div>
+              {errors.password && <p className="text-xs font-semibold text-error mt-1">{errors.password.message}</p>}
             </div>
             
-            <div className="flex items-start gap-2 py-1">
-              <input className="w-4 h-4 mt-0.5 rounded border-outline-variant text-primary focus:ring-primary" id="terms" type="checkbox" required />
-              <label className="text-xs text-on-surface-variant select-none" htmlFor="terms">
-                I agree to the <a href="#" className="text-primary hover:underline">Terms of Service</a> and <a href="#" className="text-primary hover:underline">Privacy Policy</a>
-              </label>
+            <div className="flex flex-col gap-1 py-1">
+              <div className="flex items-start gap-2">
+                <input 
+                  className="w-4 h-4 mt-0.5 rounded border-outline-variant text-primary focus:ring-primary" 
+                  id="terms" 
+                  type="checkbox" 
+                  {...register('terms')}
+                />
+                <label className="text-xs text-on-surface-variant select-none" htmlFor="terms">
+                  I agree to the <a href="#" className="text-primary hover:underline">Terms of Service</a> and <a href="#" className="text-primary hover:underline">Privacy Policy</a>
+                </label>
+              </div>
+              {errors.terms && <p className="text-xs font-semibold text-error">{errors.terms.message}</p>}
             </div>
             <button 
-              className="w-full h-[48px] bg-primary text-on-primary text-sm font-semibold rounded-lg hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98] transition-all duration-200 shadow-lg shadow-primary/10 flex items-center justify-center gap-2 group mt-2" 
+              className="w-full h-[48px] bg-primary text-on-primary text-sm font-semibold rounded-lg hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98] transition-all duration-200 shadow-lg shadow-primary/10 flex items-center justify-center gap-2 group mt-2 disabled:opacity-70 disabled:cursor-not-allowed" 
               type="submit"
+              disabled={isSubmitting}
             >
-              Create Account
-              <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              {isSubmitting ? 'Creating Account...' : 'Create Account'}
+              {!isSubmitting && <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>}
             </button>
           </form>
 
