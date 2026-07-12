@@ -1,4 +1,26 @@
-export default function Topbar({ role, onMenuClick }) {
+import { useNavigate } from 'react-router-dom';
+import { LogOut } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { apiClient } from '../../api/client';
+
+export default function Topbar({ role, user, onMenuClick }) {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const refreshToken = localStorage.getItem('refresh_token');
+      if (refreshToken) {
+        await apiClient.post('/auth/logout', { refresh_token: refreshToken });
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      toast.success('Logged out successfully');
+      navigate('/login');
+    }
+  };
   return (
     <header className="h-[64px] sticky top-0 z-30 bg-surface border-b border-outline-variant flex justify-between items-center px-4 lg:px-6 w-full flex-shrink-0">
       <div className="flex items-center gap-2 lg:gap-4 flex-1 max-w-2xl">
@@ -36,10 +58,21 @@ export default function Topbar({ role, onMenuClick }) {
             />
           </div>
           <div className="hidden lg:block">
-            <p className="text-sm font-semibold text-on-surface group-hover:text-primary transition-colors leading-tight">Alex Carter</p>
+            <p className="text-sm font-semibold text-on-surface group-hover:text-primary transition-colors leading-tight">
+              {user ? user.name : 'Loading...'}
+            </p>
             <p className="text-[10px] text-primary font-bold uppercase tracking-wider leading-none mt-0.5">{role || 'User'}</p>
           </div>
         </div>
+        
+        {/* Logout Button */}
+        <button 
+          onClick={handleLogout}
+          title="Logout"
+          className="ml-2 p-2 text-on-surface-variant hover:bg-error/10 hover:text-error rounded-full transition-all flex items-center justify-center"
+        >
+          <LogOut className="w-5 h-5" />
+        </button>
 
       </div>
     </header>
