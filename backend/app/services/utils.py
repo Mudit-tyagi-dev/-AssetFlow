@@ -7,13 +7,16 @@ from app.models.notification import Notification
 
 async def log_activity(
     db: AsyncSession,
-    org_id: uuid.UUID,
+    org_id: Optional[uuid.UUID],
     actor_id: uuid.UUID,
     action: str,
     entity_type: str,
     entity_id: uuid.UUID,
     metadata: Optional[Dict[str, Any]] = None
 ) -> None:
+    # Skip activity logging when the user has no org yet (e.g. global signup)
+    if org_id is None:
+        return
     log_entry = ActivityLog(
         id=uuid7(),
         org_id=org_id,

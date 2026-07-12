@@ -16,7 +16,7 @@ from app.models.org import Organization
 from app.models.user import User, RefreshToken
 from app.repositories.org import OrganizationRepository
 from app.repositories.user import UserRepository, RefreshTokenRepository
-from app.schemas.user import OrganizationRegisterRequest, UserSignupRequest, UserLogin
+from app.schemas.user import OrganizationRegisterRequest, CreateOrganizationRequest, UserSignupRequest, UserLogin
 from app.services.utils import log_activity
 
 class AuthService:
@@ -67,24 +67,16 @@ class AuthService:
 
     @staticmethod
     async def signup_employee(db: AsyncSession, req: UserSignupRequest) -> User:
-        org_repo = OrganizationRepository(db)
         user_repo = UserRepository(db)
 
-        # Check if org exists
-        org = await org_repo.get(req.org_id)
-        if not org:
-            raise NotFoundError("Organization not found.")
-        if org.status != "active":
-            raise ConflictError("Organization is not active.")
-
-        # Check if email is in use in this org
-        existing_user = await user_repo.get_by_email(req.email, req.org_id)
-        if existing_user:
-            raise ConflictError("Email is already registered in this organization.")
+        # Check if email is already registered globally
+        existing_users = await user_repo.get_by_email_global(req.email)
+        if existing_users:
+            raise ConflictError("An account with this email already exists.")
 
         user = User(
             id=uuid7(),
-            org_id=req.org_id,
+            org_id=None,
             name=req.name,
             email=req.email,
             password_hash=get_password_hash(req.password),
@@ -96,7 +88,7 @@ class AuthService:
 
         await log_activity(
             db,
-            org_id=req.org_id,
+            org_id=None,
             actor_id=user.id,
             action="signup_employee",
             entity_type="user",
@@ -104,6 +96,53 @@ class AuthService:
         )
 
         return user
+
+    @staticmethod
+    async def create_organization_for_user(
+        db: AsyncSession,
+        req: CreateOrganizationRequest,
+        current_user: User
+    ) -> User:
+        """Create a new organization and elevate the current user to admin.
+        Only allowed if the user has no org yet.
+        """
+        from app.core.exceptions import ConflictError, ForbiddenError
+        if current_user.org_id is not None:
+            raise ForbiddenError("You already belong to an organization.")
+
+        org_repo = OrganizationRepository(db)
+
+        # Check slug uniqueness
+        existing_org = await org_repo.get_by_slug(req.org_slug)
+        if existing_org:
+            raise ConflictError("Organization slug is already taken.")
+
+        org = Organization(
+            id=uuid7(),
+            name=req.org_name,
+            slug=req.org_slug,
+            status="active"
+        )
+        db.add(org)
+        await db.flush()
+
+        # Upgrade the current user to admin and link to this org
+        current_user.org_id = org.id
+        current_user.role = "admin"
+        db.add(current_user)
+        await db.flush()
+
+        await log_activity(
+            db,
+            org_id=org.id,
+            actor_id=current_user.id,
+            action="create_organization",
+            entity_type="organization",
+            entity_id=org.id,
+            metadata={"org_slug": req.org_slug}
+        )
+
+        return current_user
 
     @staticmethod
     async def login(db: AsyncSession, req: UserLogin) -> dict:
@@ -131,7 +170,7 @@ class AuthService:
         # Generate tokens
         data = {
             "user_id": str(user.id),
-            "org_id": str(user.org_id),
+            "org_id": str(user.org_id) if user.org_id else None,
             "role": user.role.value
         }
         access_token = create_access_token(data)
@@ -197,7 +236,7 @@ class AuthService:
         # Generate new tokens
         data = {
             "user_id": str(user.id),
-            "org_id": str(user.org_id),
+            "org_id": str(user.org_id) if user.org_id else None,
             "role": user.role.value
         }
         new_access_token = create_access_token(data)
