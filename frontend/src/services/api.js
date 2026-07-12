@@ -32,7 +32,18 @@ apiClient.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
+// Add a response interceptor to catch 403 errors for orgless users
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 403) {
+      const detail = error.response.data?.detail;
+      const isOrgless = typeof detail === 'string' && detail.toLowerCase().includes('organization');
+      if (isOrgless) {
+        window.location.href = '/organization-setup';
+        return Promise.reject(error);
+      }
+    }
     return Promise.reject(error);
   }
 );
