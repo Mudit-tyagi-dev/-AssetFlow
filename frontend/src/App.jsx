@@ -23,6 +23,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import RegisterOrg from './pages/RegisterOrg';
 import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/register-org" element={<RegisterOrg />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
