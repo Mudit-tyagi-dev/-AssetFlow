@@ -13,6 +13,8 @@ from app.schemas.user import (
     PasswordResetRequest,
 )
 from app.services.auth_service import AuthService
+from app.api.v1.deps import get_current_user
+from app.models.user import User
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -55,6 +57,13 @@ async def refresh(
     async with db.begin():
         token_data = await AuthService.refresh_tokens(db, req.refresh_token)
         return token_data
+
+@router.get("/me", response_model=UserRead)
+async def get_me(
+    current_user: User = Depends(get_current_user)
+):
+    """Get the currently logged-in user's profile."""
+    return current_user
 
 @router.post("/logout", status_code=status.HTTP_200_OK)
 async def logout(
