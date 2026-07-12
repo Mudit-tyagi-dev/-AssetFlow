@@ -1,8 +1,40 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import toast from 'react-hot-toast';
+
+// Define the validation schema using Zod
+const loginSchema = z.object({
+  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  // Initialize react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = async (data) => {
+    // Simulate a network request
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    console.log('Login attempt with:', data);
+    
+    // Show a success toast
+    toast.success('Successfully logged in!');
+    
+    // Route to the dashboard
+    navigate('/admin/dashboard');
+  };
 
   return (
     <main className="flex h-screen w-full overflow-hidden bg-background font-sans text-on-surface">
@@ -28,8 +60,6 @@ export default function Login() {
               The next-generation ERP for high-performance enterprise resource planning and asset management.
             </p>
           </div>
-          {/* Data Micro-Card Overlay */}
-          
         </div>
       </section>
 
@@ -47,18 +77,24 @@ export default function Login() {
           </div>
 
           {/* Form */}
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className="space-y-1.5">
               <label className="text-sm font-medium text-on-surface-variant block" htmlFor="email">Email Address</label>
               <div className="relative group">
-                <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors text-[20px]">mail</span>
+                <span className={`material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[20px] transition-colors ${errors.email ? 'text-error' : 'text-outline group-focus-within:text-primary'}`}>mail</span>
                 <input 
-                  className="w-full h-[44px] pl-[42px] pr-4 rounded-lg border border-outline-variant bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-sm" 
+                  className={`w-full h-[44px] pl-[42px] pr-4 rounded-lg border bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 transition-all duration-200 text-sm ${
+                    errors.email 
+                      ? 'border-error focus:ring-error/20 focus:border-error' 
+                      : 'border-outline-variant focus:ring-primary/20 focus:border-primary'
+                  }`} 
                   id="email" 
                   placeholder="name@company.com" 
                   type="email"
+                  {...register('email')}
                 />
               </div>
+              {errors.email && <p className="text-xs font-semibold text-error mt-1">{errors.email.message}</p>}
             </div>
             <div className="space-y-1.5">
               <div className="flex justify-between items-center">
@@ -66,12 +102,17 @@ export default function Login() {
                 <a className="text-xs font-medium text-primary hover:text-primary-fixed-dim transition-colors" href="#">Forgot password?</a>
               </div>
               <div className="relative group">
-                <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors text-[20px]">lock</span>
+                <span className={`material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[20px] transition-colors ${errors.password ? 'text-error' : 'text-outline group-focus-within:text-primary'}`}>lock</span>
                 <input 
-                  className="w-full h-[44px] pl-[42px] pr-[42px] rounded-lg border border-outline-variant bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-sm" 
+                  className={`w-full h-[44px] pl-[42px] pr-[42px] rounded-lg border bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 transition-all duration-200 text-sm ${
+                    errors.password 
+                      ? 'border-error focus:ring-error/20 focus:border-error' 
+                      : 'border-outline-variant focus:ring-primary/20 focus:border-primary'
+                  }`}
                   id="password" 
                   placeholder="••••••••" 
                   type={showPassword ? "text" : "password"}
+                  {...register('password')}
                 />
                 <button 
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors" 
@@ -81,19 +122,32 @@ export default function Login() {
                   <span className="material-symbols-outlined text-[20px]">{showPassword ? "visibility_off" : "visibility"}</span>
                 </button>
               </div>
+              {errors.password && <p className="text-xs font-semibold text-error mt-1">{errors.password.message}</p>}
             </div>
             <div className="flex items-center gap-2 py-1">
               <input className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary" id="remember" type="checkbox"/>
               <label className="text-sm text-on-surface-variant select-none" htmlFor="remember">Remember this device</label>
             </div>
             <button 
-              className="w-full h-[48px] bg-primary text-on-primary text-sm font-semibold rounded-lg hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98] transition-all duration-200 shadow-lg shadow-primary/10 flex items-center justify-center gap-2 group mt-2" 
+              className="w-full h-[48px] bg-primary text-on-primary text-sm font-semibold rounded-lg hover:bg-primary-container hover:text-on-primary-container active:scale-[0.98] transition-all duration-200 shadow-lg shadow-primary/10 flex items-center justify-center gap-2 group mt-2 disabled:opacity-70 disabled:cursor-not-allowed" 
               type="submit"
+              disabled={isSubmitting}
             >
-              Sign In
-              <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              {isSubmitting ? 'Signing in...' : 'Sign In'}
+              {!isSubmitting && <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>}
             </button>
           </form>
+
+          {/* MOCK DEV LOGIN BUTTONS */}
+          <div className="flex flex-col gap-2 mt-4 p-4 border border-error/20 bg-error-container/10 rounded-xl">
+            <p className="text-xs font-bold text-error mb-1 uppercase tracking-widest text-center">Dev Mock Login</p>
+            <div className="grid grid-cols-2 gap-2">
+              <button onClick={() => { toast.success('Logged in as Admin'); navigate('/admin/dashboard'); }} className="text-xs bg-surface-container-high py-2 rounded font-semibold hover:bg-primary hover:text-white transition-colors">Admin</button>
+              <button onClick={() => { toast.success('Logged in as Asset Manager'); navigate('/manager/dashboard'); }} className="text-xs bg-surface-container-high py-2 rounded font-semibold hover:bg-primary hover:text-white transition-colors">Asset Manager</button>
+              <button onClick={() => { toast.success('Logged in as Dept Head'); navigate('/head/dashboard'); }} className="text-xs bg-surface-container-high py-2 rounded font-semibold hover:bg-primary hover:text-white transition-colors">Dept Head</button>
+              <button onClick={() => { toast.success('Logged in as Employee'); navigate('/user/dashboard'); }} className="text-xs bg-surface-container-high py-2 rounded font-semibold hover:bg-primary hover:text-white transition-colors">Employee</button>
+            </div>
+          </div>
 
           {/* Divider */}
           <div className="relative py-3">

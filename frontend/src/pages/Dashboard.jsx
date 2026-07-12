@@ -1,6 +1,17 @@
+import { useState, useEffect } from 'react';
 import { ArrowUpRight, ArrowDownRight, Users, Box, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 export default function Dashboard() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate network request
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const kpis = [
     { title: 'Total Assets', value: '12,450', change: '+2.5%', trend: 'up', icon: Box },
     { title: 'Active Employees', value: '3,240', change: '+1.2%', trend: 'up', icon: Users },
@@ -8,8 +19,55 @@ export default function Dashboard() {
     { title: 'Compliance Rate', value: '98.5%', change: '+0.5%', trend: 'up', icon: CheckCircle2, success: true },
   ];
 
+  if (isLoading) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="flex items-center justify-between">
+          <div className="h-8 w-48 bg-surface-container-high rounded-lg"></div>
+          <div className="h-10 w-32 bg-surface-container-high rounded-lg"></div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm h-32 flex flex-col justify-between">
+              <div className="flex justify-between">
+                <div className="w-10 h-10 bg-surface-container-high rounded-lg"></div>
+                <div className="w-16 h-6 bg-surface-container-high rounded"></div>
+              </div>
+              <div>
+                <div className="w-24 h-8 bg-surface-container-high rounded mb-2"></div>
+                <div className="w-32 h-4 bg-surface-container-high rounded"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 h-80 shadow-sm flex flex-col">
+             <div className="w-48 h-6 bg-surface-container-high rounded mb-4"></div>
+             <div className="flex-1 bg-surface-container rounded-lg"></div>
+          </div>
+          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 h-80 shadow-sm flex flex-col">
+            <div className="w-32 h-6 bg-surface-container-high rounded mb-4"></div>
+            <div className="space-y-4 flex-1">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="flex gap-3">
+                  <div className="w-8 h-8 rounded-full bg-surface-container-high flex-shrink-0"></div>
+                  <div className="space-y-2 flex-1 pt-1">
+                    <div className="h-4 bg-surface-container-high rounded w-3/4"></div>
+                    <div className="h-3 bg-surface-container-high rounded w-1/2"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-heading font-bold text-on-surface">Dashboard Overview</h1>
         <button className="bg-primary-container text-on-primary-container px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary transition-colors">
