@@ -8,6 +8,7 @@ import { MaintenanceService } from '../services/maintenance';
 import { AssetsService } from '../services/assets';
 import { apiClient } from '../api/client';
 import toast from 'react-hot-toast';
+import ConfirmModal from '../components/ui/ConfirmModal';
 
 export default function Maintenance() {
   const location = useLocation();
@@ -32,6 +33,11 @@ export default function Maintenance() {
   const [isAssignOpen, setIsAssignOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [formSubmitting, setFormSubmitting] = useState(false);
+
+  // Resolve Confirm Modal State
+  const [isConfirmResolveOpen, setIsConfirmResolveOpen] = useState(false);
+  const [resolveRequestId, setResolveRequestId] = useState(null);
+  const [isResolving, setIsResolving] = useState(false);
 
   // Form states
   const [createFormData, setCreateFormData] = useState({
@@ -246,17 +252,25 @@ export default function Maintenance() {
     }
   };
 
-  const handleResolve = async (id) => {
-    if (!window.confirm('Are you sure you want to mark this request as resolved? The asset status will return to Available.')) {
-      return;
-    }
+  const handleResolveClick = (id) => {
+    setResolveRequestId(id);
+    setIsConfirmResolveOpen(true);
+  };
+
+  const handleConfirmResolve = async () => {
+    if (!resolveRequestId) return;
+    setIsResolving(true);
     try {
-      await MaintenanceService.resolveRequest(id);
+      await MaintenanceService.resolveRequest(resolveRequestId);
       toast.success('Request marked as resolved');
       loadData();
+      setIsConfirmResolveOpen(false);
+      setResolveRequestId(null);
     } catch (err) {
       console.error('Failed to resolve request:', err);
       toast.error(getErrorMessage(err));
+    } finally {
+      setIsResolving(false);
     }
   };
 

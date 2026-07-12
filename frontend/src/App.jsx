@@ -25,14 +25,16 @@ import RegisterOrg from './pages/RegisterOrg';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import OrganizationSetup from './pages/OrganizationSetup';
+import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
+import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
   return (
-    <>
+    <ThemeProvider>
       <Toaster 
         position="top-right" 
-        toastOptions={{ className: 'font-sans text-sm font-semibold', duration: 3000 }} 
+        toastOptions={{ className: 'font-sans text-sm font-semibold dark:bg-surface-container-lowest dark:text-on-surface dark:border dark:border-outline-variant/35', duration: 3000 }} 
         containerStyle={{ zIndex: 99999 }}
       />
       <BrowserRouter>
@@ -58,6 +60,7 @@ function App() {
           <Route path="audit" element={<Audit />} />
           <Route path="reports" element={<Reports />} />
           <Route path="notifications" element={<Notifications />} />
+          <Route path="settings" element={<Settings />} />
           <Route path="asset/:id" element={<AssetDetails />} />
         </Route>
 
@@ -71,6 +74,7 @@ function App() {
           <Route path="audit" element={<Audit />} />
           <Route path="reports" element={<Reports />} />
           <Route path="notifications" element={<Notifications />} />
+          <Route path="settings" element={<Settings />} />
           <Route path="asset/:id" element={<AssetDetails />} />
         </Route>
 
@@ -82,6 +86,7 @@ function App() {
           <Route path="booking" element={<ResourceBooking />} />
           <Route path="reports" element={<Reports />} />
           <Route path="notifications" element={<Notifications />} />
+          <Route path="settings" element={<Settings />} />
           <Route path="asset/:id" element={<AssetDetails />} />
         </Route>
 
@@ -93,6 +98,7 @@ function App() {
           <Route path="booking" element={<ResourceBooking />} />
           <Route path="maintenance" element={<Maintenance />} />
           <Route path="notifications" element={<Notifications />} />
+          <Route path="settings" element={<Settings />} />
           <Route path="asset/:id" element={<AssetDetails />} />
         </Route>
 
@@ -100,7 +106,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
-    </>
+    </ThemeProvider>
   );
 }
 
