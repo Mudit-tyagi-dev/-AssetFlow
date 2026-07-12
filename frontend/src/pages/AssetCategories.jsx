@@ -13,6 +13,7 @@ export default function AssetCategories() {
   const [catWarranty, setCatWarranty] = useState('12');
   const [catDesc, setCatDesc] = useState('');
   const [trackDep, setTrackDep] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null);
 
   const fetchCategories = async () => {
     try {
@@ -29,7 +30,41 @@ export default function AssetCategories() {
     fetchCategories();
   }, []);
 
-  const handleCreateCategory = async (e) => {
+  const resetForm = () => {
+    setCatName('');
+    setCatIcon('Devices');
+    setCatWarranty('12');
+    setCatDesc('');
+    setTrackDep(false);
+    setEditingCategory(null);
+  };
+
+  const handleEditClick = (cat) => {
+    setEditingCategory(cat);
+    setCatName(cat.name || '');
+    setCatIcon(cat.custom_fields?.icon || 'Devices');
+    setCatWarranty(cat.custom_fields?.warranty || '12');
+    setCatDesc(cat.custom_fields?.description || '');
+    setTrackDep(!!cat.custom_fields?.track_depreciation);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteCategory = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this category? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      await apiClient.delete(`/org/categories/${id}`);
+      toast.success('Category deleted successfully');
+      fetchCategories();
+    } catch (err) {
+      console.error('Failed to delete category:', err);
+      toast.error(err.response?.data?.detail || 'Failed to delete category. Active assets might be assigned to this category.');
+    }
+  };
+
+  const handleSubmitCategory = async (e) => {
     e.preventDefault();
     if (!catName.trim()) {
       toast.error('Category name is required');
@@ -46,20 +81,20 @@ export default function AssetCategories() {
           track_depreciation: trackDep
         }
       };
-      await apiClient.post('/org/categories', payload);
-      toast.success('Category created successfully!');
+
+      if (editingCategory) {
+        await apiClient.put(`/org/categories/${editingCategory.id}`, payload);
+        toast.success('Category updated successfully!');
+      } else {
+        await apiClient.post('/org/categories', payload);
+        toast.success('Category created successfully!');
+      }
       
-      // Reset form
-      setCatName('');
-      setCatIcon('Devices');
-      setCatWarranty('12');
-      setCatDesc('');
-      setTrackDep(false);
+      resetForm();
       setIsModalOpen(false);
-      
       fetchCategories();
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Failed to create category');
+      toast.error(err.response?.data?.detail || 'Failed to save category');
     }
   };
 
@@ -76,7 +111,7 @@ export default function AssetCategories() {
   return (
     <>
       {/* Breadcrumbs & Header Actions */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 animate-fade-in">
         <div>
           <nav className="flex gap-2 text-xs font-semibold text-on-surface-variant mb-2">
             <span>Assets</span>
@@ -87,8 +122,8 @@ export default function AssetCategories() {
           <p className="text-sm text-on-surface-variant mt-1 font-medium">Manage and organize enterprise physical assets by type.</p>
         </div>
         <button 
-          className="bg-primary text-white px-6 py-3 rounded-xl flex items-center gap-2 text-sm font-semibold hover:bg-primary/90 shadow-lg shadow-primary/20 hover:shadow-xl transition-all active:scale-95" 
-          onClick={() => setIsModalOpen(true)}
+          className="bg-primary text-white px-6 py-3 rounded-xl flex items-center gap-2 text-sm font-semibold hover:bg-primary/90 shadow-lg shadow-primary/20 hover:shadow-xl transition-all active:scale-95 cursor-pointer" 
+          onClick={() => { resetForm(); setIsModalOpen(true); }}
         >
           <span className="material-symbols-outlined text-xl">add</span>
           Add Category
@@ -100,7 +135,7 @@ export default function AssetCategories() {
           <p className="text-on-surface-variant font-medium">Loading categories...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
           {categories.map((cat) => {
             const iconKey = cat.custom_fields?.icon || 'Devices';
             const { icon, container, bg } = getIconDetails(iconKey);
@@ -108,18 +143,36 @@ export default function AssetCategories() {
             const description = cat.custom_fields?.description || 'No description provided.';
 
             return (
-              <div key={cat.id} className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 hover:shadow-md transition-shadow group cursor-pointer">
-                <div className="flex justify-between items-start mb-6">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${container}`}>
-                    <span className="material-symbols-outlined text-3xl">{icon}</span>
+              <div key={cat.id} className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 hover:shadow-md transition-shadow group flex flex-col justify-between min-h-[220px]">
+                <div>
+                  <div className="flex justify-between items-start mb-6">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${container}`}>
+                      <span className="material-symbols-outlined text-3xl">{icon}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); handleEditClick(cat); }}
+                        className="p-1 hover:bg-surface-variant rounded text-on-surface-variant hover:text-primary transition-colors cursor-pointer inline-flex"
+                        title="Edit Category"
+                      >
+                        <span className="material-symbols-outlined text-base">edit</span>
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); handleDeleteCategory(cat.id); }}
+                        className="p-1 hover:bg-surface-variant rounded text-on-surface-variant hover:text-error transition-colors cursor-pointer inline-flex"
+                        title="Delete Category"
+                      >
+                        <span className="material-symbols-outlined text-base">delete</span>
+                      </button>
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                        cat.status === 'active' ? 'bg-secondary-container/30 text-secondary border border-secondary/20' : 'bg-surface-container-high text-on-surface-variant'
+                      }`}>
+                        {cat.status || 'active'}
+                      </span>
+                    </div>
                   </div>
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                    cat.status === 'active' ? 'bg-secondary-container/30 text-secondary border border-secondary/20' : 'bg-surface-container-high text-on-surface-variant'
-                  }`}>
-                    {cat.status}
-                  </span>
+                  <h3 className="font-bold text-xl font-heading mb-4 text-on-surface">{cat.name}</h3>
                 </div>
-                <h3 className="font-bold text-xl font-heading mb-4 text-on-surface">{cat.name}</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center text-sm font-medium text-on-surface-variant">
                     <span>Standard Warranty</span>
@@ -140,8 +193,8 @@ export default function AssetCategories() {
           
           {/* Custom Category Placeholder */}
           <div 
-            className="border-2 border-dashed border-outline-variant rounded-xl p-6 flex flex-col items-center justify-center text-center hover:bg-surface-container-low transition-all cursor-pointer group" 
-            onClick={() => setIsModalOpen(true)}
+            className="border-2 border-dashed border-outline-variant rounded-xl p-6 flex flex-col items-center justify-center text-center hover:bg-surface-container-low transition-all cursor-pointer group min-h-[220px]" 
+            onClick={() => { resetForm(); setIsModalOpen(true); }}
           >
             <div className="w-12 h-12 bg-surface-container rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <span className="material-symbols-outlined text-on-surface-variant">add_circle</span>
@@ -158,18 +211,20 @@ export default function AssetCategories() {
           <div className="bg-surface-container-lowest w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden mx-4 animate-fade-in">
             <div className="px-6 py-6 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
               <div>
-                <h3 className="font-bold text-xl font-heading text-on-surface">Add New Category</h3>
+                <h3 className="font-bold text-xl font-heading text-on-surface">
+                  {editingCategory ? 'Edit Category' : 'Add New Category'}
+                </h3>
                 <p className="text-sm font-medium text-on-surface-variant mt-1">Define parameters for a new asset group.</p>
               </div>
               <button 
-                className="p-2 hover:bg-surface-variant rounded-full transition-colors" 
-                onClick={() => setIsModalOpen(false)}
+                className="p-2 hover:bg-surface-variant rounded-full transition-colors cursor-pointer" 
+                onClick={() => { resetForm(); setIsModalOpen(false); }}
               >
                 <span className="material-symbols-outlined text-on-surface">close</span>
               </button>
             </div>
             
-            <form className="p-6 space-y-6" onSubmit={handleCreateCategory}>
+            <form className="p-6 space-y-6" onSubmit={handleSubmitCategory}>
               <div>
                 <label className="block text-sm font-semibold text-on-surface mb-2">Category Name</label>
                 <input 
@@ -187,7 +242,7 @@ export default function AssetCategories() {
                   <select 
                     value={catIcon}
                     onChange={(e) => setCatIcon(e.target.value)}
-                    className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-sm font-medium"
+                    className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-sm font-medium bg-surface"
                   >
                     <option value="Devices">Devices & Electronics</option>
                     <option value="Tools">Tools & Equipment</option>
@@ -219,26 +274,26 @@ export default function AssetCategories() {
                 <input 
                   checked={trackDep}
                   readOnly
-                  className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary bg-surface-container-low" 
+                  className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary bg-surface-container-low cursor-pointer" 
                   type="checkbox"
                 />
-                <label className="text-sm font-medium text-on-surface cursor-pointer">
+                <label className="text-sm font-medium text-on-surface cursor-pointer select-none">
                   Enable automated depreciation tracking
                 </label>
               </div>
               <div className="flex gap-3 pt-6 border-t border-outline-variant">
                 <button 
                   type="button" 
-                  className="flex-1 px-4 py-3 border border-outline-variant rounded-xl font-semibold text-on-surface hover:bg-surface-container transition-colors"
-                  onClick={() => setIsModalOpen(false)}
+                  className="flex-1 px-4 py-3 border border-outline-variant rounded-xl font-semibold text-on-surface hover:bg-surface-container transition-colors cursor-pointer"
+                  onClick={() => { resetForm(); setIsModalOpen(false); }}
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit" 
-                  className="flex-1 px-4 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
+                  className="flex-1 px-4 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 cursor-pointer"
                 >
-                  Create Category
+                  {editingCategory ? 'Save Changes' : 'Create Category'}
                 </button>
               </div>
             </form>
