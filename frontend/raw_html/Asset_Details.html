@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Asset Details | AssetFlow ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#4d44e3",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "background": "#f9f9ff",
+                        "surface-dim": "#d3daea",
+                        "primary-fixed": "#e2dfff",
+                        "surface-container-low": "#f0f3ff",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#dce2f3",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#2a313d",
+                        "on-secondary-container": "#00714d",
+                        "surface": "#f9f9ff",
+                        "on-background": "#151c27",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-bright": "#f9f9ff",
+                        "on-surface": "#151c27",
+                        "on-secondary-fixed-variant": "#005236",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#6cf8bb",
+                        "outline": "#777587",
+                        "surface-container-high": "#e2e8f8",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-tertiary-container": "#ffd4a4",
+                        "primary-container": "#4f46e5",
+                        "on-tertiary-fixed": "#2a1700",
+                        "tertiary-container": "#885500",
+                        "tertiary": "#684000",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-primary-container": "#dad7ff",
+                        "on-surface-variant": "#464555",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-primary-fixed": "#0f0069",
+                        "secondary": "#006c49",
+                        "primary": "#3525cd",
+                        "inverse-primary": "#c3c0ff",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#002113",
+                        "surface-variant": "#dce2f3",
+                        "outline-variant": "#c7c4d8",
+                        "surface-container": "#e7eefe",
+                        "inverse-on-surface": "#ebf1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit-xl": "32px",
+                        "unit-md": "16px",
+                        "sidebar-width": "260px",
+                        "gutter": "24px",
+                        "container-max": "1440px",
+                        "unit-sm": "8px",
+                        "margin-page": "32px",
+                        "unit-lg": "24px",
+                        "topbar-height": "64px",
+                        "unit-xs": "4px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "mono-sm": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "mono-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "headline-sm": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active {
+            background-color: #4f46e5;
+            color: #dad7ff;
+            font-weight: 600;
+            border-radius: 0.5rem;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7c4d8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #777587;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Navigation Shell: SideNavBar -->
+<aside class="w-sidebar-width h-screen fixed left-0 top-0 border-r border-outline-variant bg-surface flex flex-col py-unit-md px-unit-sm z-50">
+<div class="flex items-center gap-3 px-3 mb-8">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+</div>
+<div>
+<h1 class="text-headline-sm font-headline-sm font-bold text-primary">AssetFlow</h1>
+<p class="text-[10px] uppercase tracking-widest text-outline">Enterprise ERP</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Nav Item: Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<!-- Nav Item: Assets (Active) -->
+<a class="flex items-center gap-3 px-3 py-2.5 bg-primary-container text-on-primary-container font-semibold rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label-md text-label-md">Assets</span>
+</a>
+<!-- Nav Item: Allocation -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">assignment_ind</span>
+<span class="font-label-md text-label-md">Allocation</span>
+</a>
+<!-- Nav Item: Booking -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">event_available</span>
+<span class="font-label-md text-label-md">Booking</span>
+</a>
+<!-- Nav Item: Maintenance -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">build</span>
+<span class="font-label-md text-label-md">Maintenance</span>
+</a>
+<!-- Nav Item: Audit -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="font-label-md text-label-md">Audit</span>
+</a>
+<!-- Nav Item: Reports -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-md text-label-md">Notifications</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width min-h-screen bg-background">
+<!-- TopNavBar -->
+<header class="h-topbar-height sticky top-0 z-40 bg-surface border-b border-outline-variant flex justify-between items-center px-gutter w-full">
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="h-6 w-[1px] bg-outline-variant"></div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Asset Details: #AF-8829</h2>
+</div>
+<div class="flex items-center gap-unit-md">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="bg-surface-container-low border border-outline-variant rounded-xl pl-10 pr-4 py-2 text-body-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none w-64 transition-all" placeholder="Search components..." type="text"/>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors text-on-surface-variant relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional business headshot of a female asset manager in a corporate office setting with soft natural lighting and a high-end, light-mode UI background aesthetic. The manager has a confident and welcoming expression, wearing business casual attire. The image uses a clean, high-contrast palette with soft depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAz55aQc39E7KYzT7ZNa7v9TIfuUzsmZlpR7K41da1ctlLK1Q815IOYtVmOR3BEOk6V6fU1e45efXb3l_W1PfPfsbIP4QVc8qCN2ZW8dvJCPCkKbRIibK7JR2jLRgiYp0YIOXpXxF3YGQd5RH5fSP_KB0-0r4ete65FKh6L4uxw9DKnYcQ3710F0faxBwsLejk_vOGy-tQSc8adqkA0Cq27nj44LLQPraiMSdMKsgJhe3GWMCvArXkirQ"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-margin-page max-w-container-max mx-auto space-y-unit-xl">
+<!-- Hero Section: Asset Profile -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-unit-lg bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden p-6 relative">
+<!-- Action Buttons Floated Top Right -->
+<div class="absolute top-6 right-6 flex gap-2 z-10">
+<button class="px-4 py-2 bg-surface border border-outline-variant text-on-surface rounded-xl font-label-md flex items-center gap-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span> Edit
+                    </button>
+<button class="px-4 py-2 bg-surface border border-outline-variant text-on-surface rounded-xl font-label-md flex items-center gap-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">sync_alt</span> Reallocate
+                    </button>
+<button class="px-4 py-2 bg-error-container text-on-error-container rounded-xl font-label-md flex items-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">archive</span> Retire
+                    </button>
+</div>
+<!-- Asset Image -->
+<div class="lg:col-span-4 aspect-square rounded-xl overflow-hidden border border-outline-variant group relative">
+<img class="w-full h-full object-cover" data-alt="A high-precision industrial robotic arm situated in a pristine, futuristic white-walled cleanroom environment with bright, diffused professional lighting. The asset is clean and modern, representing high-end technology. The surrounding environment features soft blue highlights and metallic textures, reflecting a sophisticated Enterprise Resource Planning dashboard aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNadPsCHhC9ColYjkEvG8Am2egqOOZXm9OxzHAAujDR2vSTS0tMnM5fFGZxh8qVz1xQonVQwrqs4pGgFf8dvTIkacipxEGHB3uLs67KGplxA0HnA4WAoHWpaQx9cg0vdy-E44COh5BP4UYxQRaZVQI1m_uslomyEsbiLUy2VdslRsh440n0bMiyrkHgWsDeW9-TLsHgMiqoswv80_cTqiZToA_YWx5WN0PMXMTsBNvushOrKxvvJR4ww"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+<div class="bg-surface/10 backdrop-blur-md border border-white/20 rounded-lg px-3 py-1.5 flex items-center gap-2 text-white">
+<span class="material-symbols-outlined text-sm">visibility</span>
+<span class="text-xs font-label-sm uppercase tracking-wider">Expand Gallery</span>
+</div>
+</div>
+</div>
+<!-- Asset Stats & Identity -->
+<div class="lg:col-span-8 flex flex-col justify-between py-2">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="px-2.5 py-0.5 bg-secondary-container text-on-secondary-container rounded-full text-label-sm font-bold uppercase tracking-wider">Operational</span>
+<span class="text-label-md text-outline">Category: Heavy Machinery</span>
+</div>
+<h3 class="text-display-lg font-display-lg text-on-surface mb-2">Precision Weld-X 4000</h3>
+<p class="text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+                            Industrial grade robotic welding system with integrated AI diagnostics. Currently deployed at Northern Manufacturing Hub, Station 04. 
+                        </p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+<div class="p-4 bg-surface-container-low rounded-xl border border-outline-variant">
+<p class="text-label-sm text-outline uppercase tracking-wider mb-1">Asset Value</p>
+<p class="text-headline-sm font-bold text-on-surface">$124,500.00</p>
+<p class="text-[10px] text-secondary font-bold flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[12px]">trending_up</span> +4.2% Appreciation
+                            </p>
+</div>
+<div class="p-4 bg-surface-container-low rounded-xl border border-outline-variant">
+<p class="text-label-sm text-outline uppercase tracking-wider mb-1">Lifetime Use</p>
+<p class="text-headline-sm font-bold text-on-surface">1,422 hrs</p>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-primary w-[35%] h-full"></div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low rounded-xl border border-outline-variant">
+<p class="text-label-sm text-outline uppercase tracking-wider mb-1">Health Score</p>
+<p class="text-headline-sm font-bold text-on-surface">98%</p>
+<p class="text-[10px] text-on-secondary-container font-bold flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[12px]">check_circle</span> Optimized
+                            </p>
+</div>
+<div class="p-4 bg-surface-container-low rounded-xl border border-outline-variant">
+<p class="text-label-sm text-outline uppercase tracking-wider mb-1">Location</p>
+<p class="text-headline-sm font-bold text-on-surface">Zone B-12</p>
+<p class="text-[10px] text-outline font-bold flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[12px]">location_on</span> Facility Alpha
+                            </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Layout for Details -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-unit-lg">
+<!-- Left Column: Specs & QR -->
+<div class="md:col-span-4 space-y-unit-lg">
+<!-- QR Code & Identification -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col items-center">
+<div class="p-4 bg-white border-2 border-surface-container-high rounded-xl mb-4 shadow-sm">
+<img class="w-32 h-32 opacity-90" data-alt="A clean, minimalist high-resolution QR code generated for industrial asset tracking. The QR code is perfectly centered on a white background with a subtle drop shadow. The style is modern, technical, and high-contrast, fitting perfectly within a professional enterprise management dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApPUr-AJnDlSP4fohoKMZrikSZdZViRjOfVXcshSNMdtVPJLkj7AX7o5jaXluhTQVSfrYpIbXTB_C9pTdm92svAwwzynVzVJnTI6PMC6-gTyBPJeKMFTe3RZmmlCG3WdatzqdeGNQ4ZNo5jaft-Sw03sChbzU-oDCqTK7t800gnQFUeCbyD0r-v-e3I1ctXASolyxFNK-S-T6rA6_FTYAoMCOmqRdyWdsHvZDYtslL2Jo6xtb1h6D-Lw"/>
+</div>
+<div class="text-center">
+<p class="text-label-md font-bold text-primary mb-1">SCAN_ID: AF8829-PRC</p>
+<p class="text-body-sm text-outline">Last Scanned: Today, 08:45 AM</p>
+</div>
+<button class="w-full mt-6 py-2 border border-outline-variant rounded-lg text-label-md font-semibold hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">print</span> Print Labels
+                        </button>
+</div>
+<!-- Specifications Table -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden">
+<div class="px-6 py-4 bg-surface-container-low border-b border-outline-variant flex justify-between items-center">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Specifications</h4>
+<span class="material-symbols-outlined text-outline">info</span>
+</div>
+<div class="p-0">
+<table class="w-full text-body-md">
+<tbody><tr class="border-b border-surface-container-high">
+<td class="px-6 py-3 font-label-md text-outline">Serial Number</td>
+<td class="px-6 py-3 text-on-surface text-right font-mono-sm">SN-99821-X4K</td>
+</tr>
+<tr class="border-b border-surface-container-high">
+<td class="px-6 py-3 font-label-md text-outline">Manufacturer</td>
+<td class="px-6 py-3 text-on-surface text-right">Zenith Industrial</td>
+</tr>
+<tr class="border-b border-surface-container-high">
+<td class="px-6 py-3 font-label-md text-outline">Model Year</td>
+<td class="px-6 py-3 text-on-surface text-right">2023</td>
+</tr>
+<tr class="border-b border-surface-container-high">
+<td class="px-6 py-3 font-label-md text-outline">Power Rating</td>
+<td class="px-6 py-3 text-on-surface text-right">4.5 kW</td>
+</tr>
+<tr class="border-b border-surface-container-high">
+<td class="px-6 py-3 font-label-md text-outline">Input Voltage</td>
+<td class="px-6 py-3 text-on-surface text-right">480V 3-Phase</td>
+</tr>
+<tr>
+<td class="px-6 py-3 font-label-md text-outline">Dimensions</td>
+<td class="px-6 py-3 text-on-surface text-right">1.2m x 0.8m x 2.4m</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<!-- Attached Documents -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden">
+<div class="px-6 py-4 bg-surface-container-low border-b border-outline-variant flex justify-between items-center">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Documents</h4>
+<span class="text-label-sm bg-primary-container text-on-primary-container px-2 py-0.5 rounded-full">3 Files</span>
+</div>
+<div class="p-4 space-y-2">
+<div class="flex items-center gap-3 p-3 rounded-lg border border-surface-container-high hover:border-primary-container hover:bg-surface-container-low transition-all group cursor-pointer">
+<div class="w-10 h-10 bg-error-container/20 text-error rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-label-md font-bold text-on-surface truncate">User_Manual_v4.pdf</p>
+<p class="text-body-sm text-outline">2.4 MB • 12 Jan 2024</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">download</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg border border-surface-container-high hover:border-primary-container hover:bg-surface-container-low transition-all group cursor-pointer">
+<div class="w-10 h-10 bg-secondary-container/20 text-secondary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-label-md font-bold text-on-surface truncate">Warranty_Card.docx</p>
+<p class="text-body-sm text-outline">456 KB • 12 Jan 2024</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">download</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg border border-surface-container-high hover:border-primary-container hover:bg-surface-container-low transition-all group cursor-pointer">
+<div class="w-10 h-10 bg-tertiary-container/20 text-tertiary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-label-md font-bold text-on-surface truncate">Performance_Report_Q4.pdf</p>
+<p class="text-body-sm text-outline">1.1 MB • 05 Oct 2023</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">download</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: History & Logs -->
+<div class="md:col-span-8 space-y-unit-lg">
+<!-- Activity Tabs Controls -->
+<div class="flex border-b border-outline-variant gap-8 overflow-x-auto scrollbar-hide">
+<button class="pb-3 text-primary font-bold border-b-2 border-primary whitespace-nowrap flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">history</span> Audit Trail
+                        </button>
+<button class="pb-3 text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span> Allocation History
+                        </button>
+<button class="pb-3 text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">construction</span> Maintenance Log
+                        </button>
+</div>
+<!-- Timeline Content: Audit Trail -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 relative">
+<div class="flex justify-between items-center mb-8">
+<h4 class="font-headline-sm text-headline-sm">Asset Timeline</h4>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 text-label-md border border-outline-variant rounded-lg bg-surface hover:bg-surface-container-low transition-colors">Filter</button>
+<button class="px-3 py-1.5 text-label-md border border-outline-variant rounded-lg bg-surface hover:bg-surface-container-low transition-colors">Export CSV</button>
+</div>
+</div>
+<div class="relative space-y-8 before:content-[''] before:absolute before:left-4 before:top-0 before:bottom-0 before:w-[2px] before:bg-surface-container-highest">
+<!-- Timeline Entry 1 -->
+<div class="relative pl-12">
+<div class="absolute left-0 top-0 w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center border-4 border-surface z-10">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">build</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant">
+<div class="flex justify-between items-start mb-2">
+<h5 class="text-label-md font-bold text-on-surface">Scheduled Maintenance Completed</h5>
+<span class="text-body-sm text-outline">Oct 24, 2024 • 14:30</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-3">Recalibration of welding sensors and cooling system flushing. All tests passed with 100% efficiency.</p>
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male technician wearing industrial safety gear, featuring a neutral and professional expression, set against a clean white laboratory background. The lighting is bright and technical, maintaining the consistent light-mode ERP aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApBFrKTfsjQP_W30zf0P_aAe0AajKd0AATMfMIlQYXhA4L72z_pnsV0zBl1dDYcFK38ewHhetJAoOBKyHOev9G5qknhbJNZjtlc_gE27KWbixE2IYeiVyL5j9qxLDVG5lg7eUqcDZ_oQKgM4XbgLXw9zgqsMx7KgoF1YjhPO9XQVczCJwW_7UlBvnymXQGo3Brf8LKXNvawm69klfYT1PR0az1C8gNgt12Yx0Oa-rEyK_bzr98OFPWOA"/>
+</div>
+<span class="text-body-sm text-on-surface font-medium">Marcus Chen (Chief Engineer)</span>
+</div>
+</div>
+</div>
+<!-- Timeline Entry 2 -->
+<div class="relative pl-12">
+<div class="absolute left-0 top-0 w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center border-4 border-surface z-10">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">move_down</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant">
+<div class="flex justify-between items-start mb-2">
+<h5 class="text-label-md font-bold text-on-surface">Asset Relocated</h5>
+<span class="text-body-sm text-outline">Oct 12, 2024 • 09:15</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-2">Moved from <span class="font-medium text-on-surface">Storage A</span> to <span class="font-medium text-on-surface">Production Zone B-12</span>.</p>
+<span class="px-2 py-0.5 bg-surface border border-outline-variant rounded-md text-[10px] font-bold text-outline uppercase">Workflow: Deployment</span>
+</div>
+</div>
+<!-- Timeline Entry 3 -->
+<div class="relative pl-12">
+<div class="absolute left-0 top-0 w-8 h-8 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center border-4 border-surface z-10">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">fact_check</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant">
+<div class="flex justify-between items-start mb-2">
+<h5 class="text-label-md font-bold text-on-surface">Annual Audit Passed</h5>
+<span class="text-body-sm text-outline">Sep 05, 2024 • 11:00</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-3">Asset verified by internal audit team. No discrepancies found in valuation or condition.</p>
+<div class="flex gap-2">
+<div class="px-3 py-1 bg-surface border border-outline-variant rounded-full text-[10px] font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] text-secondary">verified</span> Audit_ID: 2991
+                                        </div>
+</div>
+</div>
+</div>
+<!-- Timeline Entry 4 (Load More) -->
+<div class="relative pl-12 pb-2">
+<button class="text-label-md font-bold text-primary hover:underline flex items-center gap-1">
+                                    View 45 older events <span class="material-symbols-outlined text-[18px]">keyboard_arrow_down</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Allocation Summary Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-headline-sm text-headline-sm">Current Allocation</h4>
+<button class="text-primary font-bold text-label-md hover:underline">Change Allocation</button>
+</div>
+<div class="flex flex-col md:flex-row gap-6">
+<div class="flex-1 flex gap-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant">
+<div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<p class="text-label-sm text-outline uppercase tracking-wider mb-1">Custodian</p>
+<p class="text-label-md font-bold text-on-surface">Sarah J. Williams</p>
+<p class="text-body-sm text-on-surface-variant">Production Lead | Ext. 441</p>
+</div>
+</div>
+<div class="flex-1 flex gap-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant">
+<div class="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined">apartment</span>
+</div>
+<div>
+<p class="text-label-sm text-outline uppercase tracking-wider mb-1">Cost Center</p>
+<p class="text-label-md font-bold text-on-surface">DEPT-FAB-009</p>
+<p class="text-body-sm text-on-surface-variant">Fabrication Division</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="p-gutter text-center border-t border-outline-variant mt-unit-xl">
+<p class="text-label-sm text-outline">© 2024 AssetFlow Enterprise Resource Planning. Data current as of 27 Oct 2024 10:22 UTC.</p>
+</footer>
+</main>
+<script>
+        // Micro-interactions and Tab Switching Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.overflow-x-auto button');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Reset all tabs
+                    tabs.forEach(t => {
+                        t.classList.remove('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+                        t.classList.add('text-on-surface-variant');
+                    });
+                    
+                    // Set active
+                    tab.classList.remove('text-on-surface-variant');
+                    tab.classList.add('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+                    
+                    // Here you would typically swap content sections
+                    console.log('Tab Switched:', tab.innerText.trim());
+                });
+            });
+
+            // Button Hover Scale Micro-interaction
+            const actionButtons = document.querySelectorAll('button');
+            actionButtons.forEach(btn => {
+                btn.addEventListener('mousedown', () => btn.classList.add('scale-[0.98]'));
+                btn.addEventListener('mouseup', () => btn.classList.remove('scale-[0.98]'));
+                btn.addEventListener('mouseleave', () => btn.classList.remove('scale-[0.98]'));
+            });
+        });
+    </script>
+</body></html>

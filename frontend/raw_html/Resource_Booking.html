@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AssetFlow | Resource Booking</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "surface-tint": "#4d44e3",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "background": "#f9f9ff",
+                    "surface-dim": "#d3daea",
+                    "primary-fixed": "#e2dfff",
+                    "surface-container-low": "#f0f3ff",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#dce2f3",
+                    "error-container": "#ffdad6",
+                    "inverse-surface": "#2a313d",
+                    "on-secondary-container": "#00714d",
+                    "surface": "#f9f9ff",
+                    "on-background": "#151c27",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "surface-bright": "#f9f9ff",
+                    "on-surface": "#151c27",
+                    "on-secondary-fixed-variant": "#005236",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#6cf8bb",
+                    "outline": "#777587",
+                    "surface-container-high": "#e2e8f8",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "on-tertiary-container": "#ffd4a4",
+                    "primary-container": "#4f46e5",
+                    "on-tertiary-fixed": "#2a1700",
+                    "tertiary-container": "#885500",
+                    "tertiary": "#684000",
+                    "tertiary-fixed": "#ffddb8",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-primary-container": "#dad7ff",
+                    "on-surface-variant": "#464555",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-fixed": "#0f0069",
+                    "secondary": "#006c49",
+                    "primary": "#3525cd",
+                    "inverse-primary": "#c3c0ff",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#002113",
+                    "surface-variant": "#dce2f3",
+                    "outline-variant": "#c7c4d8",
+                    "surface-container": "#e7eefe",
+                    "inverse-on-surface": "#ebf1ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit-xl": "32px",
+                    "unit-md": "16px",
+                    "sidebar-width": "260px",
+                    "gutter": "24px",
+                    "container-max": "1440px",
+                    "unit-sm": "8px",
+                    "margin-page": "32px",
+                    "unit-lg": "24px",
+                    "topbar-height": "64px",
+                    "unit-xs": "4px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "mono-sm": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "display-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "mono-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-sm": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9f9ff; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+        .calendar-grid { display: grid; grid-template-columns: 80px repeat(7, 1fr); }
+        .time-slot { height: 60px; border-bottom: 1px solid #e7eefe; border-right: 1px solid #e7eefe; position: relative; }
+        .booking-entry { position: absolute; border-radius: 8px; font-size: 11px; padding: 4px 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
+        .booking-entry:hover { transform: scale(1.02); z-index: 10; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .glass-panel { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Side Navigation Bar -->
+<aside class="w-sidebar-width h-screen fixed left-0 top-0 border-r border-outline-variant bg-surface flex flex-col py-unit-md px-unit-sm z-50">
+<div class="flex items-center gap-3 px-3 mb-8">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<div>
+<h1 class="text-headline-sm font-bold text-primary">AssetFlow</h1>
+<p class="text-[10px] uppercase tracking-widest text-outline">Enterprise ERP</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-body-md" href="#">
+<span class="material-symbols-outlined">dashboard</span> Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-body-md" href="#">
+<span class="material-symbols-outlined">corporate_fare</span> Organization
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-body-md" href="#">
+<span class="material-symbols-outlined">inventory_2</span> Assets
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container font-semibold rounded-lg font-body-md" href="#">
+<span class="material-symbols-outlined">event_available</span> Booking
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-body-md" href="#">
+<span class="material-symbols-outlined">build</span> Maintenance
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-body-md" href="#">
+<span class="material-symbols-outlined">analytics</span> Reports
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-body-md" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant">
+<div class="flex items-center gap-3 px-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a senior operations manager in a high-tech corporate office. The setting is bright and modern with soft sunlight coming through glass windows. The individual has a confident yet approachable expression, wearing business casual attire. The overall lighting is clean and high-key to match a professional enterprise UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqlW7XtBetASA5B6AuSt1p9dboetwb_eXWlCnnuySqDV-miXZEaQJgAJKJ_kA5MaGcjEuh86r5uBERAgTfZXFTc04IWf3h-jg9hAMGKDR1orzcvwRoZUygMFxIsDGL5A3cgbEteunFty_ITXOErD_QGFipyIsp5q9pGILw4x8-Wu15_XyRQ6WZoAjeGxKEdQK1hrtYqAqFA-MjxAEF2BWvkVmA0fLUAivEH4seIsgN8uxB1YJkN2h_kg"/>
+</div>
+<div>
+<p class="font-label-md text-on-surface">Alex Rivera</p>
+<p class="text-xs text-outline">Admin Access</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="ml-sidebar-width min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="h-topbar-height sticky top-0 bg-surface border-b border-outline-variant flex justify-between items-center px-gutter z-40">
+<div class="flex items-center gap-6 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-body-md focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search resources, bookings, or users..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full relative transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-md flex items-center gap-2 hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                    New Booking
+                </button>
+</div>
+</header>
+<!-- Main Workspace -->
+<div class="p-gutter flex flex-col gap-unit-lg flex-1 overflow-hidden">
+<!-- Breadcrumbs & Title -->
+<div class="flex justify-between items-end">
+<div>
+<nav class="flex text-xs text-outline mb-2 gap-1 items-center">
+<span>Workspace</span> <span class="material-symbols-outlined text-[14px]">chevron_right</span> <span>Booking</span>
+</nav>
+<h2 class="font-headline-md text-on-surface">Resource Availability</h2>
+</div>
+<div class="flex bg-surface-container rounded-lg p-1">
+<button class="px-4 py-1.5 rounded-md text-label-md bg-surface-container-lowest shadow-sm text-primary font-semibold">Day</button>
+<button class="px-4 py-1.5 rounded-md text-label-md text-on-surface-variant hover:text-on-surface">Week</button>
+<button class="px-4 py-1.5 rounded-md text-label-md text-on-surface-variant hover:text-on-surface">Month</button>
+</div>
+</div>
+<!-- Bento Layout Content -->
+<div class="grid grid-cols-12 gap-unit-lg flex-1 min-h-0">
+<!-- Left Sidebar: Resource Selection -->
+<div class="col-span-3 flex flex-col gap-unit-md overflow-y-auto pr-2 scrollbar-hide">
+<h3 class="font-label-sm text-outline uppercase tracking-wider">Resources</h3>
+<!-- Resource Card: Meeting Rooms -->
+<div class="space-y-unit-sm">
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl hover:border-primary transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined">meeting_room</span>
+</div>
+<span class="bg-secondary-container/20 text-secondary text-[10px] font-bold px-2 py-0.5 rounded-full">AVAILABLE</span>
+</div>
+<h4 class="font-label-md text-on-surface group-hover:text-primary transition-colors">Executive Boardroom</h4>
+<p class="text-xs text-outline">Floor 4 • 12 Person Cap.</p>
+</div>
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl hover:border-primary transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<div class="w-10 h-10 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined">directions_car</span>
+</div>
+<span class="bg-error-container/20 text-error text-[10px] font-bold px-2 py-0.5 rounded-full">IN USE</span>
+</div>
+<h4 class="font-label-md text-on-surface group-hover:text-primary transition-colors">Tesla Model 3 - #402</h4>
+<p class="text-xs text-outline">Parking Bay A-12 • EV</p>
+</div>
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl hover:border-primary transition-all cursor-pointer group opacity-75 grayscale hover:grayscale-0 transition-all">
+<div class="flex justify-between items-start mb-2">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined">videocam</span>
+</div>
+<span class="bg-tertiary-container/20 text-tertiary text-[10px] font-bold px-2 py-0.5 rounded-full">MAINTENANCE</span>
+</div>
+<h4 class="font-label-md text-on-surface group-hover:text-primary transition-colors">Studio A - Video Suite</h4>
+<p class="text-xs text-outline">Basement • High Priority</p>
+</div>
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl hover:border-primary transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined">meeting_room</span>
+</div>
+<span class="bg-secondary-container/20 text-secondary text-[10px] font-bold px-2 py-0.5 rounded-full">AVAILABLE</span>
+</div>
+<h4 class="font-label-md text-on-surface group-hover:text-primary transition-colors">Huddle Space 2</h4>
+<p class="text-xs text-outline">Floor 2 • 4 Person Cap.</p>
+</div>
+</div>
+</div>
+<!-- Right: Calendar Main Interface -->
+<div class="col-span-9 bg-surface-container-lowest border border-outline-variant rounded-2xl flex flex-col overflow-hidden shadow-sm">
+<!-- Calendar Header -->
+<div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low/50">
+<div class="flex items-center gap-4">
+<h3 class="font-headline-sm text-on-surface">September 12, 2024</h3>
+<div class="flex gap-1">
+<button class="p-1 hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="p-1 hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+<div class="flex gap-2">
+<span class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="w-3 h-3 rounded-full bg-primary"></span> Confirmed
+                            </span>
+<span class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="w-3 h-3 rounded-full bg-secondary"></span> Pending
+                            </span>
+<span class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="w-3 h-3 rounded-full bg-error"></span> Overlap Conflict
+                            </span>
+</div>
+</div>
+<!-- Calendar Body -->
+<div class="flex-1 overflow-y-auto scrollbar-hide relative">
+<div class="calendar-grid">
+<!-- Time Header -->
+<div class="sticky top-0 bg-surface-container-lowest z-20 border-b border-outline-variant h-10"></div>
+<div class="sticky top-0 bg-surface-container-lowest z-20 border-b border-outline-variant text-center font-label-sm text-outline flex items-center justify-center">Mon</div>
+<div class="sticky top-0 bg-surface-container-lowest z-20 border-b border-outline-variant text-center font-label-sm text-outline flex items-center justify-center">Tue</div>
+<div class="sticky top-0 bg-surface-container-lowest z-20 border-b border-outline-variant text-center font-label-sm text-on-primary-container bg-primary-container/20 flex items-center justify-center border-x border-primary-container/30">Wed (Today)</div>
+<div class="sticky top-0 bg-surface-container-lowest z-20 border-b border-outline-variant text-center font-label-sm text-outline flex items-center justify-center">Thu</div>
+<div class="sticky top-0 bg-surface-container-lowest z-20 border-b border-outline-variant text-center font-label-sm text-outline flex items-center justify-center">Fri</div>
+<div class="sticky top-0 bg-surface-container-lowest z-20 border-b border-outline-variant text-center font-label-sm text-outline flex items-center justify-center">Sat</div>
+<div class="sticky top-0 bg-surface-container-lowest z-20 border-b border-outline-variant text-center font-label-sm text-outline flex items-center justify-center">Sun</div>
+<!-- Row loop (Manual simulation for demonstration) -->
+<!-- 8 AM -->
+<div class="h-[60px] flex items-center justify-center text-xs font-mono-sm text-outline border-b border-outline-variant">08:00</div>
+<div class="time-slot" onclick="openModal('08:00', 'Monday')"></div>
+<div class="time-slot" onclick="openModal('08:00', 'Tuesday')"></div>
+<div class="time-slot bg-primary-container/5 border-x border-primary-container/10" onclick="openModal('08:00', 'Wednesday')">
+<!-- Booking Entry -->
+<div class="booking-entry bg-primary text-on-primary w-[90%] left-[5%] top-2 h-[45px] shadow-md shadow-primary/20" onclick="event.stopPropagation()">
+<p class="font-bold">Team Sync</p>
+<p class="opacity-80 text-[9px]">A. Rivera</p>
+</div>
+</div>
+<div class="time-slot" onclick="openModal('08:00', 'Thursday')"></div>
+<div class="time-slot" onclick="openModal('08:00', 'Friday')"></div>
+<div class="time-slot" onclick="openModal('08:00', 'Saturday')"></div>
+<div class="time-slot" onclick="openModal('08:00', 'Sunday')"></div>
+<!-- 9 AM -->
+<div class="h-[60px] flex items-center justify-center text-xs font-mono-sm text-outline border-b border-outline-variant">09:00</div>
+<div class="time-slot" onclick="openModal('09:00', 'Monday')"></div>
+<div class="time-slot" onclick="openModal('09:00', 'Tuesday')">
+<div class="booking-entry bg-secondary text-on-secondary w-[90%] left-[5%] top-4 h-[110px]" onclick="event.stopPropagation()">
+<p class="font-bold">Quarterly Review</p>
+<p class="opacity-80 text-[9px]">Finance Dept</p>
+</div>
+</div>
+<div class="time-slot bg-primary-container/5 border-x border-primary-container/10" onclick="openModal('09:00', 'Wednesday')"></div>
+<div class="time-slot" onclick="openModal('09:00', 'Thursday')"></div>
+<div class="time-slot" onclick="openModal('09:00', 'Friday')"></div>
+<div class="time-slot" onclick="openModal('09:00', 'Saturday')"></div>
+<div class="time-slot" onclick="openModal('09:00', 'Sunday')"></div>
+<!-- 10 AM -->
+<div class="h-[60px] flex items-center justify-center text-xs font-mono-sm text-outline border-b border-outline-variant">10:00</div>
+<div class="time-slot" onclick="openModal('10:00', 'Monday')"></div>
+<div class="time-slot" onclick="openModal('10:00', 'Tuesday')"></div>
+<div class="time-slot bg-primary-container/5 border-x border-primary-container/10" onclick="openModal('10:00', 'Wednesday')">
+<!-- Conflict Overlay -->
+<div class="booking-entry bg-error text-on-error w-[90%] left-[5%] top-2 h-[80px] shadow-lg animate-pulse" onclick="event.stopPropagation(); alert('Conflict: Multiple bookings overlap in this slot.')">
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">warning</span> <span class="font-bold">OVERLAP</span></div>
+<p class="text-[9px]">Double booking detected</p>
+</div>
+</div>
+<div class="time-slot" onclick="openModal('10:00', 'Thursday')"></div>
+<div class="time-slot" onclick="openModal('10:00', 'Friday')"></div>
+<div class="time-slot" onclick="openModal('10:00', 'Saturday')"></div>
+<div class="time-slot" onclick="openModal('10:00', 'Sunday')"></div>
+<!-- 11 AM -->
+<div class="h-[60px] flex items-center justify-center text-xs font-mono-sm text-outline border-b border-outline-variant">11:00</div>
+<div class="time-slot"></div>
+<div class="time-slot"></div>
+<div class="time-slot bg-primary-container/5 border-x border-primary-container/10"></div>
+<div class="time-slot"></div>
+<div class="time-slot"></div>
+<div class="time-slot"></div>
+<div class="time-slot"></div>
+<!-- 12 PM -->
+<div class="h-[60px] flex items-center justify-center text-xs font-mono-sm text-outline border-b border-outline-variant">12:00</div>
+<div class="time-slot"></div>
+<div class="time-slot"></div>
+<div class="time-slot bg-primary-container/5 border-x border-primary-container/10"></div>
+<div class="time-slot"></div>
+<div class="time-slot"></div>
+<div class="time-slot"></div>
+<div class="time-slot"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Booking Modal -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center hidden" id="bookingModal">
+<div class="absolute inset-0 bg-inverse-surface/40 backdrop-blur-sm" onclick="closeModal()"></div>
+<div class="relative w-full max-w-lg bg-surface-container-lowest rounded-2xl shadow-2xl overflow-hidden border border-outline-variant scale-95 transition-transform duration-300 ease-out" id="modalContainer">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-sm text-on-surface">Book Resource</h3>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors" onclick="closeModal()"><span class="material-symbols-outlined">close</span></button>
+</div>
+<div class="p-6 space-y-4">
+<div class="flex gap-4">
+<div class="flex-1">
+<label class="block text-label-sm text-outline mb-1.5 uppercase tracking-wider">Start Time</label>
+<input class="w-full border-outline-variant rounded-xl text-body-md focus:ring-primary focus:border-primary" id="modalStartTime" type="time"/>
+</div>
+<div class="flex-1">
+<label class="block text-label-sm text-outline mb-1.5 uppercase tracking-wider">End Time</label>
+<input class="w-full border-outline-variant rounded-xl text-body-md focus:ring-primary focus:border-primary" type="time"/>
+</div>
+</div>
+<div>
+<label class="block text-label-sm text-outline mb-1.5 uppercase tracking-wider">Select Resource</label>
+<select class="w-full border-outline-variant rounded-xl text-body-md focus:ring-primary focus:border-primary bg-surface">
+<option>Executive Boardroom</option>
+<option>Tesla Model 3 - #402</option>
+<option>Huddle Space 2</option>
+<option>Projector Unit 09</option>
+</select>
+</div>
+<div>
+<label class="block text-label-sm text-outline mb-1.5 uppercase tracking-wider">Booking Title</label>
+<input class="w-full border-outline-variant rounded-xl text-body-md focus:ring-primary focus:border-primary" placeholder="e.g. Project Kickoff" type="text"/>
+</div>
+<!-- Conflict Alert (Hidden by default) -->
+<div class="p-4 bg-error-container text-on-error-container rounded-xl flex gap-3 items-start border border-error/20">
+<span class="material-symbols-outlined text-error">warning</span>
+<div>
+<p class="font-label-md">Schedule Conflict</p>
+<p class="text-xs opacity-80">This resource is already booked for 'Marketing Sync' from 10:00 to 11:30.</p>
+</div>
+</div>
+<div class="pt-4 flex gap-3">
+<button class="flex-1 py-3 text-label-md font-semibold text-on-surface-variant hover:bg-surface-container rounded-xl transition-all" onclick="closeModal()">Cancel</button>
+<button class="flex-[2] py-3 text-label-md font-semibold bg-primary text-on-primary rounded-xl hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95">Confirm Booking</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+        function openModal(time, day) {
+            const modal = document.getElementById('bookingModal');
+            const container = document.getElementById('modalContainer');
+            const timeInput = document.getElementById('modalStartTime');
+            
+            timeInput.value = time;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                container.classList.remove('scale-95');
+                container.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('bookingModal');
+            const container = document.getElementById('modalContainer');
+            
+            container.classList.remove('scale-100');
+            container.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // Handle Escape Key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body></html>

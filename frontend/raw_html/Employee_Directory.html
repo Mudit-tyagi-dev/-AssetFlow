@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AssetFlow - Employee Directory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "surface-tint": "#4d44e3",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "background": "#f9f9ff",
+                    "surface-dim": "#d3daea",
+                    "primary-fixed": "#e2dfff",
+                    "surface-container-low": "#f0f3ff",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#dce2f3",
+                    "error-container": "#ffdad6",
+                    "inverse-surface": "#2a313d",
+                    "on-secondary-container": "#00714d",
+                    "surface": "#f9f9ff",
+                    "on-background": "#151c27",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "surface-bright": "#f9f9ff",
+                    "on-surface": "#151c27",
+                    "on-secondary-fixed-variant": "#005236",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#6cf8bb",
+                    "outline": "#777587",
+                    "surface-container-high": "#e2e8f8",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "on-tertiary-container": "#ffd4a4",
+                    "primary-container": "#4f46e5",
+                    "on-tertiary-fixed": "#2a1700",
+                    "tertiary-container": "#885500",
+                    "tertiary": "#684000",
+                    "tertiary-fixed": "#ffddb8",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-primary-container": "#dad7ff",
+                    "on-surface-variant": "#464555",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-fixed": "#0f0069",
+                    "secondary": "#006c49",
+                    "primary": "#3525cd",
+                    "inverse-primary": "#c3c0ff",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#002113",
+                    "surface-variant": "#dce2f3",
+                    "outline-variant": "#c7c4d8",
+                    "surface-container": "#e7eefe",
+                    "inverse-on-surface": "#ebf1ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit-xl": "32px",
+                    "unit-md": "16px",
+                    "sidebar-width": "260px",
+                    "gutter": "24px",
+                    "container-max": "1440px",
+                    "unit-sm": "8px",
+                    "margin-page": "32px",
+                    "unit-lg": "24px",
+                    "topbar-height": "64px",
+                    "unit-xs": "4px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "mono-sm": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "display-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "mono-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-sm": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #f9f9ff;
+            color: #151c27;
+        }
+        .employee-card:hover {
+            box-shadow: 0px 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .active-tab {
+            background-color: #4f46e5 !important;
+            color: #dad7ff !important;
+            font-weight: 600 !important;
+            border-radius: 0.5rem !important;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-x-hidden">
+<!-- SideNavBar Anchor -->
+<aside class="w-sidebar-width h-screen fixed left-0 top-0 border-r border-outline-variant flex flex-col h-full py-unit-md px-unit-sm bg-surface z-50">
+<div class="mb-unit-xl px-unit-sm">
+<h1 class="text-headline-sm font-headline-sm font-bold text-primary">AssetFlow</h1>
+<p class="text-label-sm text-on-surface-variant">Enterprise ERP</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Organization is the active state for Employee Directory -->
+<a class="flex items-center px-unit-sm py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-primary">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center px-unit-sm py-2 active-tab transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3">corporate_fare</span>
+<span>Organization</span>
+</a>
+<a class="flex items-center px-unit-sm py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-primary">inventory_2</span>
+<span>Assets</span>
+</a>
+<a class="flex items-center px-unit-sm py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-primary">assignment_ind</span>
+<span>Allocation</span>
+</a>
+<a class="flex items-center px-unit-sm py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-primary">event_available</span>
+<span>Booking</span>
+</a>
+<a class="flex items-center px-unit-sm py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-primary">build</span>
+<span>Maintenance</span>
+</a>
+<a class="flex items-center px-unit-sm py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-primary">fact_check</span>
+<span>Audit</span>
+</a>
+<a class="flex items-center px-unit-sm py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-primary">analytics</span>
+<span>Reports</span>
+</a>
+<a class="flex items-center px-unit-sm py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-primary">notifications</span>
+<span>Notifications</span>
+</a>
+<a class="flex items-center px-unit-sm py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-primary">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-unit-sm py-unit-md flex items-center gap-3 border-t border-outline-variant">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold">JD</div>
+<div>
+<p class="font-label-md text-on-surface font-semibold">Jane Doe</p>
+<p class="text-xs text-on-surface-variant">Admin Access</p>
+</div>
+</div>
+</aside>
+<!-- TopNavBar Anchor -->
+<header class="h-topbar-height sticky top-0 z-40 bg-surface border-b border-outline-variant flex justify-between items-center px-gutter w-full ml-sidebar-width max-w-[calc(1440px-260px)]">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-xl py-2 pl-10 pr-4 text-label-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="Search employees by name, role or ID..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-primary text-white rounded-xl font-label-md hover:bg-surface-tint transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-sm">add</span>
+<span>New Employee</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-sidebar-width min-h-screen p-margin-page max-w-container-max mx-auto">
+<!-- Header & Statistics (Bento Style) -->
+<div class="flex flex-col md:flex-row justify-between items-end mb-unit-lg gap-gutter">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-background">Employee Directory</h2>
+<p class="text-body-md text-on-surface-variant">Manage your organization's talent and department roles.</p>
+</div>
+<div class="flex gap-unit-sm">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant bg-surface-container-lowest text-on-surface rounded-xl font-label-md hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+<span>Filters</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant bg-surface-container-lowest text-on-surface rounded-xl font-label-md hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">file_download</span>
+<span>Export</span>
+</button>
+</div>
+</div>
+<!-- KPI Row -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-unit-lg mb-unit-xl">
+<div class="bg-surface-container-lowest border border-outline-variant p-unit-md rounded-xl">
+<p class="text-label-sm text-on-surface-variant uppercase">Total Employees</p>
+<div class="flex items-end gap-2 mt-1">
+<span class="font-headline-md text-headline-md">1,284</span>
+<span class="text-secondary text-label-sm flex items-center mb-1">
+<span class="material-symbols-outlined text-xs">trending_up</span> 4%
+                    </span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-unit-md rounded-xl">
+<p class="text-label-sm text-on-surface-variant uppercase">Active Now</p>
+<div class="flex items-end gap-2 mt-1">
+<span class="font-headline-md text-headline-md">842</span>
+<div class="w-16 h-4 bg-secondary-container/20 rounded-full overflow-hidden flex items-center mb-2 px-1">
+<div class="bg-secondary h-1 rounded-full w-[80%]"></div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-unit-md rounded-xl">
+<p class="text-label-sm text-on-surface-variant uppercase">Departments</p>
+<div class="flex items-end gap-2 mt-1">
+<span class="font-headline-md text-headline-md">12</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-unit-md rounded-xl">
+<p class="text-label-sm text-on-surface-variant uppercase">Open Roles</p>
+<div class="flex items-end gap-2 mt-1">
+<span class="font-headline-md text-headline-md">28</span>
+<span class="text-tertiary text-label-sm mb-1">Alert</span>
+</div>
+</div>
+</div>
+<!-- Directory Content -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<th class="px-unit-lg py-unit-md font-semibold">EMPLOYEE</th>
+<th class="px-unit-lg py-unit-md font-semibold">DEPARTMENT</th>
+<th class="px-unit-lg py-unit-md font-semibold">ROLE</th>
+<th class="px-unit-lg py-unit-md font-semibold">STATUS</th>
+<th class="px-unit-lg py-unit-md font-semibold text-right">ACTIONS</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Employee Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-unit-lg py-unit-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-cover bg-center border border-outline-variant" data-alt="A professional headshot of a female executive in her late 30s with short dark hair, wearing a navy blue blazer over a white shirt. The lighting is soft and flattering with a clean, light grey studio background, conveying a sense of corporate leadership and modern professionalism in line with a high-end enterprise ERP interface." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDw8GuZIxxfHKxfvOCi7MHtEQQvw-wgceeexyt4kA5ICkMPK7y6uE5tM99vmRIKVj1wOc9MQWr-omiTrdHr8l4zwM47P2XnLs6LrYox0lAKFjt11Ypfb-jTrXGwVo-g3FavzTjDpwkHlv-2y1VxhOpni8UyeFBZnkwv6IHpvYyQBHmb-vWu7GvYYnN6gLFqY5qqjcRDS1B_sbLOgLX1M_9hX2dI83X9OddZxHmrj52duKZExGajrR-OLg')"></div>
+<div>
+<p class="font-semibold text-on-surface">Alex Thompson</p>
+<p class="text-xs text-on-surface-variant">alex.t@assetflow.com</p>
+</div>
+</div>
+</td>
+<td class="px-unit-lg py-unit-md text-on-surface-variant">Product & Design</td>
+<td class="px-unit-lg py-unit-md font-medium text-on-surface">Senior UX Architect</td>
+<td class="px-unit-lg py-unit-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-secondary-container/20 text-secondary border border-secondary/10">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span>
+                                    Active
+                                </span>
+</td>
+<td class="px-unit-lg py-unit-md text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary-container/10 rounded-lg transition-colors">Promote</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Employee Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-unit-lg py-unit-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-cover bg-center border border-outline-variant" data-alt="A diverse male software engineer in his late 20s with glasses and a friendly smile, wearing a casual gray knit sweater. The portrait is set against a brightly lit, modern office background with soft bokeh effects of white and light blue. The visual style is crisp and professional, reflecting a contemporary tech workplace." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAOsBCOqkynlwQBexbRHFPwawt6855X1q0yKYh9kJgMqhMa2P6Domcy9eai1HlFCgQCox8dBkcoDH9MoGo-OjtlgPUFF8FtiNzIEO7Pu21s2oSN02m58GnKm-48Va5s3qk6jnNA9QdQedNJdJSNWtQTeVVtK764vbz9gF4h-oru4qcb-LPlBxzBld7rayj2GE-EVnfTQ0tfzEyEpSRGITtuPfWd6tRAIPWur6NFsYt535FvbAx7yETJuA')"></div>
+<div>
+<p class="font-semibold text-on-surface">Marcus Chen</p>
+<p class="text-xs text-on-surface-variant">m.chen@assetflow.com</p>
+</div>
+</div>
+</td>
+<td class="px-unit-lg py-unit-md text-on-surface-variant">Engineering</td>
+<td class="px-unit-lg py-unit-md font-medium text-on-surface">Full Stack Developer</td>
+<td class="px-unit-lg py-unit-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-secondary-container/20 text-secondary border border-secondary/10">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span>
+                                    Active
+                                </span>
+</td>
+<td class="px-unit-lg py-unit-md text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary-container/10 rounded-lg transition-colors">Promote</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Employee Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-unit-lg py-unit-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-cover bg-center border border-outline-variant" data-alt="A mature woman in her late 40s with silver-toned hair, appearing confident and professional in a corporate portrait. She wears a sharp black blazer and subtle jewelry. The background is a minimalist corporate hall with large windows letting in bright daylight, maintaining the clean, light-mode enterprise aesthetic of the platform." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDwuwplqMaPZaGD8ZwPLOlxfgsE0HwgJ3aTmmEO4EhJb3kZMa8yto1G6sVIIPEIw0iHLzcS3YRzMQosAWgg5fHJJFNZ9nt9vxedyyNTcovzZnDLC7Fs6nuOzUXKy_7YPdVPrxf3fFuyRMLox6d7XaN7Tfy7R-h6hm9aU1PtywqhE8_50SKrI9-Ccxsegir5m5GkxuPKXLmfwN6YEYnofRYWDJ620dprMS6YkEauvF92-ypzV9npL924rA')"></div>
+<div>
+<p class="font-semibold text-on-surface">Sarah Jenkins</p>
+<p class="text-xs text-on-surface-variant">s.jenkins@assetflow.com</p>
+</div>
+</div>
+</td>
+<td class="px-unit-lg py-unit-md text-on-surface-variant">Operations</td>
+<td class="px-unit-lg py-unit-md font-medium text-on-surface">Fleet Manager</td>
+<td class="px-unit-lg py-unit-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-tertiary-fixed/30 text-tertiary border border-tertiary/10">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-1.5"></span>
+                                    On Leave
+                                </span>
+</td>
+<td class="px-unit-lg py-unit-md text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary-container/10 rounded-lg transition-colors">Promote</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Employee Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-unit-lg py-unit-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-cover bg-center border border-outline-variant" data-alt="A portrait of a young Hispanic man in his early 20s with a modern haircut, smiling warmly. He is dressed in a smart casual white polo shirt. The scene is illuminated by natural light in a bright coworking space with green plants in the background, creating a vibrant and welcoming professional feel for the directory." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAGm1E2jDXNyYYUpAzS1lBMO7jj-fVyMjtrsGBtF7gY8SGNzzPFQc_VOYhewmlH9n2V9wSkwgfXkHjhlVpA10hB9eskl2CN-DYqsh9ubM_RT_HLREvZ0NLTGqjyqMO6Q0CGzRCQc26suhs0CnTsIlmqke6hPZ07WHatuwS35HOZimddMOsGIsYc4jmYWCSRuJhkasP5AEIsR4pY0B_j5Z__9ZKsoLM7dcrLbvOLEbWvKDrV8_yhizvXLg')"></div>
+<div>
+<p class="font-semibold text-on-surface">Daniel Ortega</p>
+<p class="text-xs text-on-surface-variant">d.ortega@assetflow.com</p>
+</div>
+</div>
+</td>
+<td class="px-unit-lg py-unit-md text-on-surface-variant">Finance</td>
+<td class="px-unit-lg py-unit-md font-medium text-on-surface">Asset Auditor</td>
+<td class="px-unit-lg py-unit-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-secondary-container/20 text-secondary border border-secondary/10">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span>
+                                    Active
+                                </span>
+</td>
+<td class="px-unit-lg py-unit-md text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary-container/10 rounded-lg transition-colors">Promote</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Employee Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-unit-lg py-unit-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-cover bg-center border border-outline-variant" data-alt="A professional woman of East Asian descent in her mid-30s with sleek black hair, wearing a beige cashmere sweater. She has a composed and intelligent expression. The lighting is soft and even, set in a contemporary office library with blurred bookshelves, echoing the sophisticated and data-driven nature of an enterprise platform." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCkjlOsduxFBwtqId4_47kSDYsUq97rBBuw3Uk9ljF04nMQLIJaGL-6L5IN5gQmErNLlfjg7e13tPsZvXK7UNMbs0aId2eVsgEFfU92gpeJAzlBv2sygaoM3eZc6isrMUxqxAigEbmMaH_ZvTWoolx1N9I9cW2K49v8LO2TIKWiKB3YNWZ2HDdfWSmJfrEqwoBUX3W61xMbKevuy2R2RNHIDQpQflDYxi8kEusv6gNvCaBpM-mO8Xi0mA')"></div>
+<div>
+<p class="font-semibold text-on-surface">Yuki Sato</p>
+<p class="text-xs text-on-surface-variant">y.sato@assetflow.com</p>
+</div>
+</div>
+</td>
+<td class="px-unit-lg py-unit-md text-on-surface-variant">Engineering</td>
+<td class="px-unit-lg py-unit-md font-medium text-on-surface">Data Scientist</td>
+<td class="px-unit-lg py-unit-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-error-container/20 text-error border border-error/10">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-1.5"></span>
+                                    Offline
+                                </span>
+</td>
+<td class="px-unit-lg py-unit-md text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary-container/10 rounded-lg transition-colors">Promote</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-unit-lg py-unit-md flex items-center justify-between border-t border-outline-variant bg-surface-container-low">
+<p class="text-label-sm text-on-surface-variant">Showing 1 to 5 of 1,284 employees</p>
+<div class="flex items-center gap-2">
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-surface-container-high disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white font-semibold text-xs">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-high text-on-surface-variant font-semibold text-xs transition-colors">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-high text-on-surface-variant font-semibold text-xs transition-colors">3</button>
+<span class="mx-1 text-on-surface-variant">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-high text-on-surface-variant font-semibold text-xs transition-colors">257</button>
+</div>
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Floating Quick Add Button (Contextual) -->
+<button class="fixed bottom-unit-xl right-unit-xl w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all group z-50">
+<span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform">add</span>
+</button>
+</main>
+<script>
+        // Simple search interaction mockup
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('input', (e) => {
+            console.log('Searching for:', e.target.value);
+            // Real implementation would filter the table rows
+        });
+
+        // Add micro-interaction to buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-[0.98]');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-[0.98]');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-[0.98]');
+            });
+        });
+    </script>
+</body></html>
