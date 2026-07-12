@@ -5,11 +5,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import toast from 'react-hot-toast';
 
+import { apiClient } from '../api/client';
+
 // Define the validation schema using Zod
 const signupSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters').regex(/[A-Z]/, 'Password must contain at least one uppercase letter').regex(/[0-9]/, 'Password must contain at least one number'),
+  org_id: z.string().uuid('Please enter a valid Organization UUID'),
   terms: z.boolean().refine((val) => val === true, 'You must agree to the terms'),
 });
 
@@ -27,15 +30,20 @@ export default function Signup() {
   });
 
   const onSubmit = async (data) => {
-    // Simulate a network request
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log('Signup attempt with:', data);
-    
-    // Show a success toast
-    toast.success('Account created successfully! Welcome to AssetFlow.');
-    
-    // Route to login
-    navigate('/login');
+    try {
+      await apiClient.post('/auth/signup', {
+        org_id: data.org_id,
+        email: data.email,
+        password: data.password,
+        name: data.name
+      });
+      
+      toast.success('Account created successfully! Welcome to AssetFlow.');
+      navigate('/login');
+    } catch (error) {
+      console.error('Signup error:', error);
+      toast.error(error.response?.data?.detail || 'Failed to create account.');
+    }
   };
 
   return (
@@ -74,12 +82,28 @@ export default function Signup() {
               <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>account_balance_wallet</span>
               <span className="text-xl font-extrabold font-heading tracking-tight">AssetFlow</span>
             </div>
-            <h2 className="text-2xl font-semibold font-heading text-on-surface">Create an Account</h2>
-            <p className="text-sm text-on-surface-variant">Sign up to start managing your enterprise assets.</p>
+            <h2 className="text-2xl font-semibold font-heading text-on-surface">Employee Signup</h2>
+            <p className="text-sm text-on-surface-variant">Sign up to join your organization's workspace.</p>
           </div>
 
           {/* Form */}
           <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium text-on-surface-variant block" htmlFor="org_id">Organization ID</label>
+              <div className="relative group">
+                <span className={`material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[20px] transition-colors ${errors.org_id ? 'text-error' : 'text-outline group-focus-within:text-primary'}`}>domain</span>
+                <input 
+                  className={`w-full h-[44px] pl-[42px] pr-4 rounded-lg border bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 transition-all duration-200 text-sm ${
+                    errors.org_id ? 'border-error focus:ring-error/20 focus:border-error' : 'border-outline-variant focus:ring-primary/20 focus:border-primary'
+                  }`} 
+                  id="org_id" 
+                  placeholder="e.g. 550e8400-e29b-41d4-a716-446655440000" 
+                  type="text"
+                  {...register('org_id')}
+                />
+              </div>
+              {errors.org_id && <p className="text-xs font-semibold text-error mt-1">{errors.org_id.message}</p>}
+            </div>
             <div className="space-y-1.5">
               <label className="text-sm font-medium text-on-surface-variant block" htmlFor="name">Full Name</label>
               <div className="relative group">
@@ -193,6 +217,8 @@ export default function Signup() {
           <footer className="pt-6 text-center">
             <p className="text-xs text-on-surface-variant">
               Already have an account? <Link to="/login" className="text-primary font-semibold hover:underline">Sign In here</Link>
+              <br/>
+              Want to create a new organization? <Link to="/register-org" className="text-primary font-semibold hover:underline">Register your Org</Link>
             </p>
           </footer>
         </div>
