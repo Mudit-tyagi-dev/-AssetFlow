@@ -23,7 +23,17 @@ async def log_activity(
         entity_id=entity_id,
         meta_data=metadata
     )
-    db.add(log_entry)
+    
+    # Use a savepoint to prevent failing the entire transaction if the log fails
+    # (e.g. if the actor_id doesn't exist in the remote DB)
+    async with db.begin_nested():
+        db.add(log_entry)
+        try:
+            await db.flush()
+        except Exception as e:
+            # The begin_nested() context manager will automatically rollback to the savepoint
+            import logging
+            logging.error(f"Failed to save activity log: {e}")
 
 async def create_notification(
     db: AsyncSession,
