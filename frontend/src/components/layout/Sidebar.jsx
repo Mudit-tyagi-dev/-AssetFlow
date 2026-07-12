@@ -73,10 +73,19 @@ export default function Sidebar({ role, basePath, isOpen, setIsOpen }) {
           <span className="material-symbols-outlined group-hover:text-primary">notifications</span>
           <span>Notifications</span>
         </NavLink>
-        <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg font-sans text-sm text-on-surface-variant hover:bg-surface-container-high transition-colors group">
+        <NavLink 
+          to={`${basePath}/settings`} 
+          className={({ isActive }) => 
+            `flex items-center gap-3 px-4 py-2.5 rounded-lg font-sans text-sm group transition-colors ${
+              isActive
+                ? 'bg-primary-container text-on-primary-container font-semibold shadow-sm'
+                : 'text-on-surface-variant hover:bg-surface-container-high'
+            }`
+          }
+        >
           <span className="material-symbols-outlined group-hover:text-primary">settings</span>
           <span>Settings</span>
-        </button>
+        </NavLink>
       </div>
     </aside>
   );
