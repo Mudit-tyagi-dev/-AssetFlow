@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Use environment variable for API URL or fallback to localhost
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://assetflow-a5yb.onrender.com';
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
