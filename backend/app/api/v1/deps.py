@@ -42,6 +42,8 @@ async def get_current_user(
 async def get_current_org(
     current_user: User = Depends(get_current_user)
 ) -> uuid.UUID:
+    if current_user.org_id is None:
+        raise ForbiddenError("You must create or belong to an organization to perform this action.")
     return current_user.org_id
 
 def require_role(*roles: str):

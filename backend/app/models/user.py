@@ -12,11 +12,11 @@ from app.models.enums import UserRole, UserStatus
 class User(Base):
     __tablename__ = "users"
     __table_args__ = (
-        UniqueConstraint("org_id", "email", name="users_org_id_email_key"),
+        UniqueConstraint("email", name="users_email_key"),
     )
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid7)
-    org_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("organizations.id"), nullable=False, index=True)
+    org_id: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey("organizations.id", ondelete="SET NULL"), nullable=True, index=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     email: Mapped[str] = mapped_column(String(255), nullable=False)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -44,7 +44,7 @@ class User(Base):
     )
 
     # Relationships
-    organization: Mapped[Organization] = relationship(back_populates="users", foreign_keys=[org_id])
+    organization: Mapped[Optional[Organization]] = relationship(back_populates="users", foreign_keys=[org_id])
     department: Mapped[Optional[Department]] = relationship(foreign_keys=[department_id])
     refresh_tokens: Mapped[List[RefreshToken]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
